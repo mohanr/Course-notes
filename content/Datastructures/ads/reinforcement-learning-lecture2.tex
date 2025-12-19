@@ -46,7 +46,7 @@ $ \nabla_{\theta} J(\theta) = \nabla_{\theta} \int P_{\theta}(\tau) r(\tau) d\ta
 $ =  \int \nabla_{\theta} P_{\theta}(\tau) r(\tau) d\tau$
 
 \vskip 3ex
-\begin{tcolorbox}[sharp corners, colback=green!10, colframe=green!10!pink]
+\begin{tcolorbox}[fontupper=\Large,sharp corners, colback=green!10, colframe=green!10!pink]
 This gradient can be simplified using this trick.
 
 \vskip 3ex
@@ -56,7 +56,7 @@ $ = P_{\theta}(\tau) \nabla_{\theta} \log  P_{\theta}(\tau) $
 $ = P_{\theta}(\tau) \frac  {\nabla_{\theta}P_{\theta}(\tau)}{P_{\theta}(\tau)}$
 
 \vskip 3ex
-We apply the chain rule after evaluating
+We apply the chain rule after evaluating the derivation of
 $ \log  P_{\theta}(\tau) $ which is
 $ \frac  {1}{P_{\theta}(\tau)}$
 
@@ -69,9 +69,14 @@ We know that $P_{\theta}(\tau) = P(s_t) \Pi_t \pi_{\theta}(a_t,s_T) P(s_{t+1} \m
 So  $\log P_{\theta}(\tau) = \log P(s_t) + \sum_t \log  \pi_{\theta}(a_t,s_T) + \log P(s_{t+1} \mid (s_t,a_t))$
 
 \vskip 3ex
+
+ $ \log P(s_t) \text{ and }  \log P(s_{t+1} \mid (s_t,a_t))$
+are constants.
+
+\vskip 3ex
 $ \nabla \log  P_{\theta}(\tau) = \nabla_{\theta} \sum_t \log \pi_{\theta}(a_t,s_T)$
 
-\begin{tcolorbox}[sharp corners, colback=green!10, colframe=green!10!pink]
+\begin{tcolorbox}[fontupper=\Large,sharp corners, colback=green!10, colframe=green!10!pink]
 Expectation over trajectories sampled by or policy is $\mathbb{E}_{\tau \sim P_{\theta}(\tau)}$
 
 \vskip 3ex
@@ -79,5 +84,29 @@ So the policy gradient now is  $ \nabla{\theta} J(\theta) = \mathbb{E}_{\tau \si
 \end{tcolorbox}
 
 The equation shown above is the gradient of the policy of the RL objective.
+
+\subsection{Estimating the Gradient }
+This is the full algorithm.
+
+\begin{enumerate}
+
+\item $ \text{Sample } {r_i} \text{ from } \pi_{\theta}( a_t \mid s_t )$
+\item $ \nabla_{\theta} J(\theta)  \text{ from } \pi_{\theta}( a_t \mid s_t ) \approx \sum_i \left(\sum_t \nabla_{\theta} \log \pi_{\theta}(a_t^i s_t^i)\right) \left(\sum_t (a_t^i s_t^i)\right)$
+\item $\theta \leftarrow \theta + \alpha \nabla_{\theta} J(\theta)$
+\end{enumerate}
+
+
+\begin{enumerate}
+  \item { The equation in the first box is for imitation gradient, weighted by reward }
+  \item { The 2nd equation  is for imitation learning }
+
+\end{enumerate}
+
+\begin{figure}[ht]
+  \includegraphics{./reinforce.tikz}
+  \caption{Imitation gradient and learning}
+  \ollabel{fig:function}
+\end{figure}
+
 
 \end{document}
