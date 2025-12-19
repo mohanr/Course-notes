@@ -1,0 +1,370 @@
+\documentclass[../../../include/open-logic-chapter]{subfiles}
+
+\begin{document}
+
+\olchapter{sge}{lsm}{Lecture I}
+\olsection{The Static Predecessor problem}
+
+Data structure is represented by \emph{Set} S of items $\{x_1,..,x_n\}$
+
+Query : $\operatorname{pred}(z) = \max \{\, x \in S : x \leftarrow z \,\}$
+
+
+Example Solution : $\mathcal{O}(n\log{}n)$ using a balanced BST
+
+
+
+\subsection{Work RAM Model}
+
+\begin{itemize}
+
+\item {Item are integers $\{0,1,\dots,2^w-1 \}$}
+
+\item $ \text{``w''  word  size is} u \eqcirc 2^w-1$
+
+\item {Pointers fit in a word}
+
+\item $ \text{Space} \ge n \quad\text{and}\quad w \ge \log(\text{Space}) \ge \log(n) $
+
+
+\end{itemize}
+
+
+\subsection{Two Data Structures}
+
+\begin{itemize}
+
+\item {Van Emde Boas Tree FOCS '75}
+      \begin{itemize}
+        \item{Update/Query $\mathcal{O}(\log{}w)$ time }
+        \item{Update/Query $\mathcal{O}(\log{}u)$ space }
+      \end{itemize}
+
+\item {y Fast Tries Willard '83}
+
+\end{itemize}
+
+\item {Fusion Trees Fredman,Willard JCCS '93}
+      \begin{itemize}
+        \item{Query is $\mathcal{O}(\log{}w^{n})$ time }
+        \item{Can achieve $\mathcal\min(\lg w, \log{}w^{n})$ \(\le\) }
+        \item{Dynamic Fusion Trees  $\mathcal{O}(n\lg{}n)$ sorting  }
+\item Dynamic Fusion Trees can also achieve $\mathcal{O}(n\lg\lg n)$ sorting (Han STOC '02)
+and $\mathcal{O}\big(n\sqrt{\lg\lg n}\big)$ FOCS '02
+
+      \end{itemize}
+
+\subsection{Van Emde Boas}
+
+\begin{itemize}
+\item {Fields of $VEB_u (V)$}
+\begin{itemize}
+  \item \(\sqrt{u}\) size array  V.cluster[0] \dots V.cluster\(\sqrt{u}\)
+  \item V.summary is a VEB \(\sqrt{u}\)
+  \item V.min and V.max are integers in \{0, \dots, u-1\}
+\end{itemize}
+
+\end{itemize}
+
+\begin{itemize}
+\item {Represention of values}
+\begin{itemize}
+  \item  X \(\in\) \{0,1, \dots, u-1\}
+  \item
+\[
+  x =
+    \underbrace{1 0 1 1 }_\text{\Huge c}
+    \overbrace{0 0 1 1}^\text{\Huge i}
+\]
+\end{itemize}
+
+\end{itemize}
+
+\subsection{\texorpdfstring {Predecessor Algorithm \(\left(V, x = \langle c,i \rangle\right)\)} {Predecessor Algorithm (V, x = <c,i>)}}
+\Huge
+\[
+\begin{array}{l}
+  \text{if } x > V.\text{max} : \\
+  \quad \text{return } V.\text{max} \\
+  \text{else if } V.\text{cluster}[c].\text{min} < x : \\
+  \quad \text{return } \text{pred}(V.\text{cluster}[c], i) \\
+  \text{else } c^{\prime} = \text{pred}(V.\text{summary}, c) : \\
+  \quad \text{return } V.\text{cluster}[c^{\prime}], \text{max} \\
+\end{array}
+\]
+
+
+\subsection{\texorpdfstring {Insertion Algorithm \(\left(V, x = \langle c,i \rangle\right)\)} {Insertion Algorithm (V, x = <c,i>)}}
+\Huge
+\[
+\begin{array}{l}
+  \text{if } V = \varnothing: \\
+  \quad V.\text{min} \leftarrow x^{prime}; \\
+  \text{if } x < V.\text{min}: \\
+  \quad swap (x, V.\text{min}); \\
+  \text{else if } V.\text{cluster}[c].\text{min} = \varnothing : \\
+  \quad insert (V.summary, c); \\
+  \text{insert} ( V.\text{cluster}[{c}], i) \\
+\end{array}
+\]
+\subsection{\texorpdfstring
+  {Algorithm analysis \(\left(V, x = \langle c,i \rangle\right)\)}
+  {Algorithm analysis (V, x = <c,i>)}
+}
+
+
+\large
+
+\begin{itemize}
+\item {Prediction time}
+\begin{itemize}
+\item  T (u) = T (\(\sqrt{u}\)) + $\mathcal{O}(1)$
+\item T (u) =   $\mathcal{O}(\lg\lg{}u)$ =  $\mathcal{O}(\lg{}w)$
+\end{itemize}
+\end{itemize}
+
+\begin{itemize}
+\item {Insertion time}
+\begin{itemize}
+\item  $T (u) \le 2T (\sqrt{u}) + \mathcal{O}(1)$
+\item $T (w) \le 2T \mathcal{O}\left(\frac{w}{2}\right) +  \mathcal{O} (1)$
+\end{itemize}
+\end{itemize}
+
+
+\begin{figure}[ht]
+  \includegraphics{./ven.tikz}
+  \caption{Van Ende Boas}
+  \ollabel{fig:function}
+\end{figure}
+
+\subsection{Space of VEB}
+
+ $S (u) = (\sqrt{u} + 1) S (\sqrt{u}) +  \mathcal{O}(1)  \rightarrow S(u) = \theta{u}$
+
+\subsection{Binary trie}
+
+Search time is  $\mathcal{O}(\log{}n)$
+\vspace{55px}
+\begin{figure}[ht]
+  \includegraphics{./binarytrie.tikz}
+  \caption{Binary Trie}
+  \ollabel{fig:function}
+\end{figure}
+
+\setlength{\textfloatsep}{12pt}
+
+\begin{itemize}
+\item { Red dashed lines are jump Pointers}
+\item { Jump pointers are used when children are missing to point to the successor}
+\end{itemize}
+
+
+
+\eject
+\subsection{Add node to Binary trie}
+
+Insertion time is  $\mathcal{O}(\log{}n)$
+
+\begin{figure}[ht]
+  \includegraphics{./binarytrie-addnode.tikz}
+  \caption{Binary Trie; Add Node}
+  \ollabel{fig:function}
+\end{figure}
+
+\setlength{\textfloatsep}{10pt}
+This shows an example of addition of a new node. The New node and its left child are in blue.
+  The jump pointers are updated. And new node is added to the doubly-linked list at the appropriate position
+
+The integer inserted above is
+\[
+    \text{\Huge 0 1 0 }
+\]
+
+\subsection{Remove node from Binary trie}
+
+Removal time is  $\mathcal{O}(\log{}n)$
+
+
+
+\begin{itemize}
+\item {Remove node (It will be a leaf)}
+\item {Walk back up and remove any node without a child and The jump pointers are updated. The doubly-linked list is updated.}
+\end{itemize}
+
+
+
+\subsection{x-fast trie}
+
+
+\setlength{\textfloatsep}{9pt}
+
+\vskip 3ex
+
+
+\begin{figure}[ht]
+  \includegraphics{./xfasttrie.tikz}
+  \caption{xfasttrie}
+  \ollabel{fig:function}
+\end{figure}
+
+\begin{itemize}
+\item {An x-Fast Trie is a threaded binary trie where leaves are stored in a doubly-linked list and where all nodes in each level are stored in a hash table.}
+\item {Can do lookups in the HashTable in time $\mathcal{O}(1)$.}
+\end{itemize}
+
+\begin{itemize}
+\item {Claim: Can determine successor(x) in time  $\mathcal{O}(\log\log{}u)$.}
+\item {Start by binary searching for the longest prefix of x.}
+\item {If at a leaf node, follow the forward pointer to the successor.}
+\item {If at an internal node with a missing 1, follow the 1 thread.}
+\item {If at an internal node with a missing 0, follow the 0 thread and follow the forward pointer.}
+\end{itemize}
+
+\subsection{Fusion tries - Fredman, Willard JCSS '93}
+
+\begin{itemize}
+\item {Static Predecessor}
+\item {Made dynamic by Andersson, Thorup JACM  $\mathcal(\log_{w}n \log\log{}n)$ deterministic updates}
+\item {Made dynamic by Raman ESA JACM '96  $\mathcal{O}(\log_{w}n)$ updates (Expected time since it is a randomized algorithm)}
+\item {Query for all  $\mathcal{O}(\log_{w}n)$}
+\end{itemize}
+
+
+\subsubsection{Idea : B-Tree with branching factor $w^1/5$}
+
+\begin{itemize}
+\item {Fusion tree node stores k =  $\mathcal{O}(w^{1/5})$ keys}
+\item {Item are integers $\{x_0,\dots,x_{k-1}\}$}
+\item {$\mathcal{O}(1)$ Predecessor/Successor}
+\item {Polynomial time $k^{{0}(1)}$ Preprocessing}
+\end{itemize}
+
+
+\setlength{\textfloatsep}{9pt}
+
+\begin{figure}[ht]
+  \includegraphics{./fusion-trees-distinguishing-keys.tikz}
+  \caption{Fusion Trees Distinguishing Keys}
+  \ollabel{fig:function}
+\end{figure}
+
+\vskip 3ex
+The tree shown has \[\text{k-1} \] branching nodes and the height of the tree is \[\text{w} \]
+ $\rightarrow \le$ k-1 levels containing a branching node.
+The levels starting from the top of the tree correspond to important bits the indices of which are $b_0,\dots,b_r$ where $r<k =  \mathcal{O}(w^{1/5})$
+The leaves have the least significant bits.
+
+The parallel lines show that we can check some branching nodes to find out
+if the lower bits can exist or not instead of traversing upto the leaf. Refer
+the section on Sketching.
+
+\subsubsection{What is sketching in this algorithm?}
+
+sketch(x) = Extract bits $\{b_0,\dots,b_{r-1}\}$
+\[
+    1
+    \underbrace{1}_{\text{\Huge $b_3$}}
+    1
+    \underbrace{0}_{\text{\Huge $b_2$}}
+    \underbrace{0}^{\text{\Huge $b_1$}}
+    0
+    1
+    \underbrace{1}^{\text{\Huge $b_0$}}
+\]
+
+
+\subsubsection{Sketching Example}
+
+\vskip 3ex
+
+
+\begin{figure}[htdp]
+  \includegraphics{./sketching.tikz}
+  \caption{Example of Sketching}
+\end{figure}
+
+\begin{itemize}
+\item {The important bits (violet circles) are used for sketching}
+\item {The labels of the leaf nodes also show these (violet) bits}
+\end{itemize}
+  The query is shown by the blue path. \[
+    \underbrace{0 1 0 1 }_\text{\small Query}
+\]
+\ The sketch is
+
+\begin{align*}
+  &\underbrace{0}0\underbrace{0}0 \\
+  &\underbrace{0}0\underbrace{1}0 \\
+  &\underbrace{1}1\underbrace{0}0 \\
+  &\underbrace{1}1\underbrace{1}1
+\end{align*}
+
+
+  Since the sketch of the query \textcolor{violet}{$0$}{1}\textcolor{violet}{$0$}{1} matches the sketch
+  \textcolor{pink}{$00$} the answer will be the left-most node in the tree.
+  This is wrong. It is not the predecessor \textcolor{pink}{$0010$} or the successor \textcolor{pink}{$1100$}
+
+  We need to find a solution for this.
+
+Let us assume
+  sketch(x)  \(\le\) sketch(g) \(\le\) sketch($x_{k+1}$). We will look for the longest
+  common prefix/ancestor of the query \[\text{\large q} \] and either  $x_i$ or $x_{i+1}$.
+
+  Now we can identify the wrong path we took. The correct path from the LCA(Least
+  common Ancestor) would have lead to the left, to the tree whose nodes are shown in grey. Identify the maximum in that tree.
+  This is  \textcolor{pink}{$e$}. And find sketch(e)  among  sketch($x_i$).
+  Now we can find the predecessor sketch(e)  among  sketch($x_i$). Similarly
+  we find the successor using the same algorithm.
+
+\begin{figure}[htdp]
+  \includegraphics{./sketching-1.tikz}
+  \caption{Example of Sketching}
+\end{figure}
+
+
+\subsubsection{Approximate sketch(x)}
+
+\vskip 3ex
+
+We can spread the important bits in predictable pattern of len($\mathcal{O}(w^{1/5})$)
+Idea : Mask important bits
+
+x' = x and $\mathcal(\sum^{r-1}_{i}2^{ b_{i}})$ and multiple x'.m = $\mathcal(\sum^{r-1}_i x_{b_{i}}2^{ b_{i}})$($\mathcal(\sum^{r-1}_j2^{ m_{j}})$)
+ = $\mathcal(\sum^{r-1}_{i}\sum^{r-1}_j2^{ b_{i} + m _{j}}$
+
+Claim :
+  for any  $b_0 \dots b_{r-1}$ we can choose for any  $m_0 \dots m_{r-1}$ such that
+
+\begin{enumerate}
+\item $b_i + m_j$ are distinct $forall i, j$
+\item $b_0 + m_0 < \dots < b _{r-1}+ m_{r-1} $
+\item $( b _{r-1}+ m_{r-1}) - ( b_0 + m_0) $  = $\mathcal{O}(r^4)$ = $\mathcal{O}(w^{4/5})$
+\end{enumerate}
+
+
+\subsubsection{Proof}
+Choose $m'_0 , \dots , m'_{r-1} < r^{3}$ (Start with Stronger assumption)
+such that $b_{i} + m'_{j} < \bmod r^{3}$
+
+Property 1:
+
+Pick $m'_0, \dots, m'_{t-1}$ by induction. $m'_{t}$ must avoid $m'_{i} + b_{j} + b_{k} \bmod r^{3}$,
+$\forall\; \underbrace{i}_{\text{\small t}},\; \underbrace{j}_{\text{\small r}},\; \underbrace{k}_{\text{\small r}}$
+
+$\leftarrow\ t r^{2} < r^{3}$
+
+Property 2:
+
+Pick $m_i = m'_i + (w - b_{i} + i_{r^{3}})$ rounded down to $r^{3}$
+
+
+\begin{figure}[h]
+  \includegraphics{./proof-description.tikz}
+  \caption{Description of Proof}
+\end{figure}
+
+ We also need to mask with  $\mathcal(\sum^{r-1}_{i}2^{ b_{i} + m _{i}}$
+ and shift by  $\mathcal(b_{0} + m _{0}$
+\OLEndChapterHook
+\end{document}
