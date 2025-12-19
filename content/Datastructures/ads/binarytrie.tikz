@@ -1,0 +1,33 @@
+\scalebox{1.8}[1]{
+\begin{tikzpicture}[baseline=(current bounding box.center),
+  every node/.style={minimum size=4mm, inner sep=0.5mm},
+  normal/.style={circle,draw},
+  invis/.style={draw=none},
+  border/.style={ edge from parent/.style={dashed,draw} },
+  acc/.style={circle,thick,draw=green!50,fill=green!2},
+  rej/.style={circle,thick,draw=red!50,fill=red!20},
+  semithick]
+\begin{forest}
+  bordered tree,
+    [Root, border
+      [0, acc, name = L1,  for descendants=border
+         [0,acc[0,acc, name = L6] [1,acc, name = L7]] [-, rej ]
+      ]
+      [1, acc for descendants=border
+        [0, acc, name = L3 [0,acc, name = L2] [1,acc,name = L8]]
+        [1,acc, name = L4 [-,rej] [1,acc, name = L5]]
+      ]
+    ]
+
+    \draw[red, very thick, dashed, ->] (L1) to[out=-120,in=-120]  (L2);
+    \draw[red, very thick, dashed, ->] (L4) to[out=120,in=-120]  (L5);
+    \draw[violet, thick, dashed, <->] (L6) to[out=-120,in=-120, looseness = 2.5]  (L7);
+    \draw[violet, thick, dashed, <->] (L7) to[out=-120,in=-120, looseness = 2.5]  (L2);
+    \draw[violet, thick, dashed, <->] (L2) to[out=-120,in=-120, looseness = 2.5]  (L8);
+    \draw[violet, thick, dashed, <->] (L8) to[out=-120,in=-120, looseness = 2.5]   node[below, midway] {Doubly-linked List} (L5);
+    
+\end{forest}
+
+
+\end{tikzpicture}
+}

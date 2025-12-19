@@ -1,0 +1,41 @@
+\documentclass[../../../include/open-logic-chapter]{subfiles}
+
+\begin{document}
+
+\olchapter{ads}{orderstatistics}{Lecture II}
+\olsection{Order Statistics problem}
+
+Given \emph{k} elements in an array, find  \emph{k}th smallest element ( element of \emph{k} rank)
+
+Sorting will take $\mathcal{O}(n\log{}n)$ and we want to better than that,
+ideally better than linear time.
+
+We know that that median is $\mathlarger{ \left\lceil \frac{k + 1}{2} \right\rceil}$
+or $\mathlarger{\left\lfloor \frac{k + 1}{2} \right\rfloor}$
+
+It is tricky to find the median in linear time. In addition we also find
+\emph{k}th smallest element.
+
+That is the focus of this lecture.
+
+\subsection{Randomized Divide and Conquer}
+Rand-select \Large ${(A - p - q -  \underbrace{i}_\text{\Large {\emph{i}th smallest \\ element in \emph{A} \numrange{p}{q}}})}$
+\[
+\Huge
+\begin{array}{l}
+  \text{if } p = q \text{ then return A[p]}: \\
+  r \leftarrow \text{Rand-partition } {\emph{A} - p - q} \\
+  k \leftarrow ${r - p - 1}$ \\
+  \text{else if } V.\text{cluster}[c].\text{min} < x : \\
+  \quad \text{return } \text{pred}(V.\text{cluster}[c], i) \\
+  \text{else } c^{\prime} = \text{pred}(V.\text{summary}, c) : \\
+  \quad \text{return } V.\text{cluster}[c^{\prime}], \text{max} \\
+\end{array}
+\]
+
+ \text{\Large {Rand-partition }} {\emph{A} - p - q} means that we pick a value in
+ the range ${p}$-${q}$ and use it partition the array, so that all elements
+ less than the \emph{random} elements  are the left and the greater elements
+ are on the right
+\OLEndChapterHook
+\end{document}

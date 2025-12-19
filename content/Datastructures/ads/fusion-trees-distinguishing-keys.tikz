@@ -1,0 +1,68 @@
+\scalebox{1.8}[1]{
+
+\begin{tikzpicture}[baseline=(current bounding box.center),
+  every node/.style={minimum size=4mm, inner sep=0.5mm},
+  normal/.style={circle,draw},
+  invis/.style={draw=none},
+  border/.style={ edge from parent/.style={dashed,draw} },
+  acc/.style={circle,thick,draw=green!50,fill=green!2},
+  rej/.style={circle,thick,draw=red!50,fill=red!20},
+  semithick]
+\begin{forest}
+  bordered tree,
+    [Root, border
+      [0, acc,  for descendants=border
+         [0,acc
+            [0,acc
+                    [-,rej]
+                    [1,acc
+                            [0,acc
+                             [0,acc
+                                [0,acc
+                                [-,rej] [1, acc]]
+                             [-,rej]]
+                            [-,rej]]
+                    [-,rej]]
+           ]
+         [-, rej]
+         ]
+      [1, acc
+          [0, acc
+          [-, rej]
+              [1,acc
+              [0,acc
+                [0, acc
+                    [-,rej]
+                    [1, acc
+                        [-,rej]
+                        [1,acc]]]
+                [-, rej]
+              ]
+                 [1,acc
+                   [-, rej]
+                   [1, acc
+                    [0,acc
+                        [-,rej]
+                        [1, acc]
+                    ]
+                    [-,rej]]
+                 ]
+              ]
+          ]
+      [-, rej]
+      ]]
+      [-, rej]
+    ]
+
+
+\end{forest}
+\begin{scope}[on foreground layer]
+    % Adjust the coordinates (x1, y1) and (x2, y2) as needed
+    \draw[thick] (-2.5, 2.9) -- (1, 2.9);  % First horizontal line
+    \draw[thick] (-2.5, 2) -- (1, 2); % Second horizontal line
+    \draw[thick] (-2.5, 0.3) -- (1, 0.3);  % First horizontal line
+    \draw[thick] (-2.5, -0.5) -- (1, -0.5); % Second horizontal line
+\end{scope}
+
+\end{tikzpicture}
+}

@@ -1,0 +1,36 @@
+\documentclass{open-logic-book}
+% we're compiling from main directory
+%
+%
+
+\newcommand{\olpath}{.}
+\usepackage{tikz}
+\usepackage{mathpazo}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{helvet}
+\usepackage{courier}
+\linespread{1.05} % Palatino looks better with this
+\usepackage{gitinfo2}
+
+\documentclass{open-logic-book}
+\input{\olpath/open-logic.sty}
+\let\cleardoublepage\clearpage
+\pagestyle{plain}
+\begin{document}
+\begin{titlingpage}
+\begin{raggedleft}
+\HUGE
+\selectfont\bfseries\sffamily
+\vskip 3ex
+\normalfont\huge
+\vskip 4ex
+\vskip 4ex
+\Large
+\end{raggedleft}
+\vfill
+\end{titlingpage}
+\tableofcontents*
+\olimport[content]{content}
+% \include{content/open-logic-about}
+% \Bibliography{\olpath/bib/open-logic}
+\end{document}

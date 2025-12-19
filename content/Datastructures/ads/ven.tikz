@@ -1,0 +1,27 @@
+\begin{tikzpicture}[paint/.style={draw=#1!75, fill=#1!20}]
+ \node[isosceles triangle,
+    draw,
+    rotate=90,
+    fill=violet,
+    minimum size =8cm] (T1)at (0,0){};
+    \node (T5) at (5,5) {\Large $\mathrm{VEB}_{\sqrt{u}}$};
+ \node[isosceles triangle,
+    draw,
+    rotate=90,
+    fill=green,
+    minimum size =2cm] (T2)at (2,0){};
+ \node[isosceles triangle,
+    draw,
+    rotate=90,
+    fill=green,
+    minimum size =2cm] (T3)at (-1.9,0){};
+ \node[isosceles triangle,
+    draw,
+    rotate=90,
+    fill=green,
+    minimum size =2cm] (T4)at (-0.1,4){};
+    \draw[->] (T2) to (T5);
+    \draw[->] (T3) to (T5);
+    \draw[->] (T4) to (T5);
+
+\end{tikzpicture}

@@ -1,0 +1,68 @@
+\scalebox{1}[1]{
+\begin{tikzpicture}[baseline=(current bounding box.center),
+  every node/.style={minimum size=4mm, inner sep=0.5mm},
+  normal/.style={circle,draw},
+  invis/.style={draw=none},
+  border/.style={ edge from parent/.style={dashed,draw} },
+  acc/.style={circle,thick,draw=green!50,fill=green!2},
+  rej/.style={circle,thick,draw=red!50,fill=red!20},
+  bits/.style={circle,very thick,draw=violet!50,fill=violet!20},
+  semithick,
+  xshift=-15cm,
+  every label/.style={label distance=-1mm} % Set font size and distance for labels
+
+  ]
+
+\begin{forest}
+    bordered tree,
+    [Root,bits, border
+      [0, acc, edge label = {node [above right] {$q$}},edge=blue%<-blue edge, for descendants=border
+         [0,bits
+            [0,acc,name=L3
+              [0,acc,name=L4,label={below:\scalebox{0.5}{\textcolor{violet}{0}0\textcolor{violet}{0}0}}]
+              [1,acc,name=L5,label={below:\scalebox{0.5}{0001}}]
+            ]
+            [1,acc
+              [0,acc,label={below:\scalebox{0.5}{\textcolor{violet}{0}0\textcolor{violet}{1}0}}]
+              [1,acc,label={below:\scalebox{0.5}{0011}}]
+            ]
+
+         ]
+         [1,bits, edge label = {node [above right] {$q$}},edge=blue%<-blue edge
+            [0,acc, edge label = {node [above right] {$q$}},edge=blue%<-blue edge
+              [0,acc,label={below:\scalebox{0.5}{0100}}]
+              [1,acc,edge={blue,very thick},label={below:\scalebox{0.5}{0101}}]
+            ]
+            [1,acc
+              [0,acc,label={below:\scalebox{0.5}{0100}}]
+              [1,acc,label={below:\scalebox{0.5}{0111}},edge={blue}]]
+            ]
+
+       ]
+      [1, acc, name = L1
+         [0,bits, name = L2
+            [0,acc
+              [0,acc,label={below:\scalebox{0.5}{1000}}]
+              [1,acc,label={below:\scalebox{0.5}{1001}}]
+            ]
+            [1,acc
+              [0,acc,label={below:\scalebox{0.5}{1010}}]
+              [1,acc,label={below:\scalebox{0.5}{1011}}]
+            ]
+         ]
+            [1,bits
+             [0,acc              [0,acc,label={below:\scalebox{0.5}{\textcolor{violet}{1}1\textcolor{violet}{0}0}}]
+              [1,acc,label={below:\scalebox{0.5}{1101}}]
+            ]
+            [1,acc
+              [0,acc,label={below:\scalebox{0.5}{1010}}]
+              [1,acc,label={below:\scalebox{0.5}{\textcolor{violet}{1}1\textcolor{violet}{1}11}}]
+            ]
+            ]
+       ]
+    ]
+
+\end{forest}
+
+\end{tikzpicture}
+}
