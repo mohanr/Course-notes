@@ -1,0 +1,12 @@
+\begin{tikzpicture}[
+node distance = 10mm and 12mm,% for distance between nodes
+   box/.style = {draw, fill=red!10,very thick, minimum height = 5em,minimum width=5em}]
+\node (imitation) [box,text=blue]
+{\large $ \nabla_{\theta} J(\theta)  \approx \frac{1}{N}
+\sum_i^N \left(\sum_i^T \nabla_{\theta} \log \pi_{\theta}(a_{i,t} s_{i,t})\right) \left(\sum_i^T r( s_{i,t},a_{i,t})\right)$
+};
+\node (policygradient) [box,text=red, below =of imitation]
+                {\large $ \nabla_{\theta} J_{BC}(\theta)  \approx \frac{1}{N}
+\sum_i^N \left(\sum_i^T \nabla_{\theta} \log \pi_{\theta}(a_{i,t} s_{i,t})\right) $
+};
+\end{tikzpicture}

@@ -64,9 +64,9 @@ $ \frac  {1}{P_{\theta}(\tau)}$
 
 This means that $  \int \nabla_{\theta} P_{\theta}(\tau) r(\tau) d\tau$ is $ =  \int \nabla_{\theta}   \log  P_{\theta}(\tau)  r(\tau) d\tau$
 \vskip 3ex
-We know that $P_{\theta}(\tau) = P(s_t) \Pi_t \pi_{\theta}(a_t,s_T) P(s_{t+1} \mid (s_t,a_t))$
+We know that $P_{\theta}(\tau) = P(s_t) \Pi_t \pi_{\theta}(a_t,s_t) P(s_{t+1} \mid (s_t,a_t))$
 \vskip 3ex
-So  $\log P_{\theta}(\tau) = \log P(s_t) + \sum_t \log  \pi_{\theta}(a_t,s_T) + \log P(s_{t+1} \mid (s_t,a_t))$
+So  $\log P_{\theta}(\tau) = \log P(s_t) + \sum_t \log  \pi_{\theta}(a_t,s_t) + \log P(s_{t+1} \mid (s_t,a_t))$
 
 \vskip 3ex
 
@@ -121,7 +121,21 @@ This increases the likelihood of action when the rewards are high and decreases 
 
 q(x) is considered the old policy.$\mathbb{E}_{x \sim q(x)}\left[\frac{p(x)}{q(x)}\right] f(x)$ and we are sampling from the old policy and weighting by dividing the new policy by the old policy.
 
-\subsection{What is we want to use samples from $\overline{P}(\tau)$ ? }
+\subsection{What if we want to use samples from $\overline{P}(\tau)$ ? }
 
 $J(\theta) = \mathbb{E}_{\tau \sim \overline{P}_{\theta}(\tau)}\left[\frac{P_{\theta}(\tau)}{\overline{P}(\tau)}\right]r(\tau)$
+
+\vskip 3ex
+Some of the probabilities cancel out.
+
+\vskip 3ex
+$\Huge\frac{P_{\theta}(\tau)}{\overline{P}(\tau)} =
+ \frac{\cancel{P(s_1)} \Pi_{t=1}^T\pi_{\theta}(a_t,s_t)     \cancel{P(s_{t+1} \mid (s_t,a_t))}}{\cancel{P(s_1)} \Pi_{t=1}^T\overline{\pi}_{\theta}(a_t,s_t) \cancel{P(s_{t+1} \mid (s_t,a_t))}}$
+
+
+\begin{figure}[ht]
+  \includegraphics{./offpolicyfinalform.tikz}
+  \caption{Off-policy Gradient}
+  \ollabel{fig:function}
+\end{figure}
 \end{document}
