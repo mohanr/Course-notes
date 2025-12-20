@@ -1,0 +1,12 @@
+  \begin{tikzpicture}[%
+    >=stealth,
+    node distance=3cm,
+    on grid,
+   every node/.append style={font=\Large}, auto
+  ]
+    \node[state] (A)              {};
+    \node        (B) [right of=A,fill=red!15,text width=13cm]
+    {Common final form $ \nabla_{{\theta}^{\prime}} J({\theta}^{\prime}) \approx \frac{1}{N}
+    \sum_{i=1}^N \sum_{t=1}^T \frac{\pi_{{\theta}^{\prime}}(a_{i,t} \mid s_{i,t})}{i\pi_{\theta}(a_{i,t} \mid s_{i,t})}
+    \nabla_{{\theta}^{\prime}} \log \pi_{{\theta}^{\prime}} (a_{i,t} \mid s_{i,t}) \left(\left(\sum_{{t}^{\prime} = t}^T r(s_{i,t^{\prime}},a_{i,t^{\prime}})\right) - b\right)$};
+  \end{tikzpicture}

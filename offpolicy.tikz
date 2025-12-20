@@ -1,0 +1,12 @@
+  \begin{tikzpicture}[%
+    >=stealth,
+    node distance=3cm,
+    on grid,
+   every node/.append style={font=\Large}, auto
+  ]
+    \node[state] (A)              {};
+    \node        (B) [right of=A,fill=red!15,text width=10cm]
+    {Importance Sampling - Using proposal distribution q, we get $ \mathbb{E}_{x \sim P(x)}[f(x)] = \int P(x)f(x)dx = \int \frac{q(x)}{q(x)}P(x)f(x)dx =
+    \int q(x)\frac{p(x)}{q(x)} f(x) dx = \mathbb{E}_{x \sim q(x)}\left[\frac{p(x)}{q(x)}\right] f(x)  $ Please note:
+    Important for q to have non-zero support for high probability P(X)};
+  \end{tikzpicture}
