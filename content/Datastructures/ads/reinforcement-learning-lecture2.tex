@@ -108,5 +108,20 @@ This is the full algorithm.
   \ollabel{fig:function}
 \end{figure}
 
+This increases the likelihood of action when the rewards are high and decreases the likelihood of actions in trajectories with low reward.
 
+\subsection{Off-policy version of Policy Gradient }
+
+\begin{figure}[ht]
+  \includegraphics{./offpolicy.tikz}
+  \caption{Off-policy Gradient}
+  \ollabel{fig:function}
+\end{figure}
+
+
+q(x) is considered the old policy.$\mathbb{E}_{x \sim q(x)}\left[\frac{p(x)}{q(x)}\right] f(x)$ and we are sampling from the old policy and weighting by dividing the new policy by the old policy.
+
+\subsection{What is we want to use samples from $\overline{P}(\tau)$ ? }
+
+$J(\theta) = \mathbb{E}_{\tau \sim \overline{P}_{\theta}(\tau)}\left[\frac{P_{\theta}(\tau)}{\overline{P}(\tau)}\right]r(\tau)$
 \end{document}
