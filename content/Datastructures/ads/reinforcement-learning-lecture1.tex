@@ -1,0 +1,140 @@
+\documentclass[../../../include/open-logic-chapter]{subfiles}
+
+\begin{document}
+
+\olchapter{ads}{reinforcementlearning}{Lecture I/II/III}
+
+\olsection{Basic Definitions}
+
+\begin{itemize}
+\item{$\text{state } s_t, \text{ is the state of the world at time } t$}
+\item {$\text{action } a_t, \text{ the decision taken at time } t$}
+
+\item {$\text{ trajectory }\tau, \text{ sequence of states/obserations and actions } \mathrm{D}:={(s_1,a_1,\dots,s_T)}$}
+\item {$\text{reward function } r(s,a)$}
+\item {$\text{ Policy } \pi(a,s) \text{ or } \pi(a,o)$}
+
+\mathlarger\min\limits_{\theta} \mathbb{E}_{\tau\sim\mathrm{P_{\theta}(\tau)} }\left[\sum_t^T r(s_t, a_t)} \right]
+\end{itemize}
+
+\olsection{Imitation Learning}
+
+\subsection{What is the goal of imitation learning ? }
+\begin{itemize}
+
+
+
+\item {$ \text{Data: Given trajectories collected by an expert ``demonstrations'' } \mathrm{D}:={(s_1,a_1,\dots,s_T)} $}
+\item {$ \text{Sampled from some unknown policy } \pi_{expert} $}
+\item {$ \text{Goal: Learn a policy} \pi_{\theta} \text{ that performs at the level of } \pi_{expert} \text{ by mimicking }$}
+
+\end{itemize}
+
+\subsection{Imitation learning -Version 0 }
+\subsubsection{Deterministic policy}
+\begin{itemize}
+\item {$ \text{Data: Given trajectories collected by an expert ``demonstrations''} \mathrm{D}:={(s_1,a_1,\dots,s_T)} $}
+\item {$ \text{Supervised regression to the expert's policy}
+\normalsize\min\limits_{\theta} \frac{1}{\lVert{\mathrm{D}}\rVert} {\sum_{(s,a)\in{\mathrm{D}}}{\lVert{a -{\hat{a}} } \rVert_2^2}}
+$}
+\item {$ \text{Deploy learned policy } \pi_{theta}$}
+\end{itemize}
+\subsection{Evaluation of the RL objective }
+ $\theta^* = \operatorname*{argmax}_\theta \underbrace{\mathbb{E}_{\tau\sim\mathrm{P_{\theta}(\tau)} }\left[\sum_t^T r(s_t, a_t) \right]}_{J(\theta)}$
+
+$ \nabla_{\theta} J(\theta) = \nabla_{\theta} \int P_{\theta}(\tau) r(\tau) d\tau$
+$ =  \int \nabla_{\theta} P_{\theta}(\tau) r(\tau) d\tau$
+
+\vskip 3ex
+\begin{tcolorbox}[fontupper=\Large,sharp corners, colback=green!10, colframe=green!10!pink]
+This gradient can be simplified using this trick.
+
+\vskip 3ex
+$ = P_{\theta}(\tau) \nabla_{\theta} \log  P_{\theta}(\tau) $
+
+\vskip 3ex
+$ = P_{\theta}(\tau) \frac  {\nabla_{\theta}P_{\theta}(\tau)}{P_{\theta}(\tau)}$
+
+\vskip 3ex
+We apply the chain rule after evaluating the derivation of
+$ \log  P_{\theta}(\tau) $ which is
+$ \frac  {1}{P_{\theta}(\tau)}$
+
+\end{tcolorbox}
+
+This means that $  \int \nabla_{\theta} P_{\theta}(\tau) r(\tau) d\tau$ is $ =  \int \nabla_{\theta}   \log  P_{\theta}(\tau)  r(\tau) d\tau$
+\vskip 3ex
+We know that $P_{\theta}(\tau) = P(s_t) \Pi_t \pi_{\theta}(a_t,s_t) P(s_{t+1} \mid (s_t,a_t))$
+\vskip 3ex
+So  $\log P_{\theta}(\tau) = \log P(s_t) + \sum_t \log  \pi_{\theta}(a_t,s_t) + \log P(s_{t+1} \mid (s_t,a_t))$
+
+\vskip 3ex
+
+ $ \log P(s_t) \text{ and }  \log P(s_{t+1} \mid (s_t,a_t))$
+are constants.
+
+\vskip 3ex
+$ \nabla \log  P_{\theta}(\tau) = \nabla_{\theta} \sum_t \log \pi_{\theta}(a_t,s_T)$
+
+\begin{tcolorbox}[fontupper=\Large,sharp corners, colback=green!10, colframe=green!10!pink]
+Expectation over trajectories sampled by or policy is $\mathbb{E}_{\tau \sim P_{\theta}(\tau)}$
+
+\vskip 3ex
+So the policy gradient now is  $ \nabla{\theta} J(\theta) = \mathbb{E}_{\tau \sim P_{\theta}(\tau)} \left[\sum_t^T \nabla_{\theta} \log \pi (a_t, s_t) \right] \left[\sum_t^T r(s_t, a_t) \right]$
+\end{tcolorbox}
+
+The equation shown above is the gradient of the policy of the RL objective.
+
+\subsection{Estimating the Gradient }
+This is the full algorithm.
+
+\begin{enumerate}
+
+\item $ \text{Sample } {r_i} \text{ from } \pi_{\theta}( a_t \mid s_t )$
+\item $ \nabla_{\theta} J(\theta)  \text{ from } \pi_{\theta}( a_t \mid s_t ) \approx \sum_i \left(\sum_t \nabla_{\theta} \log \pi_{\theta}(a_t^i s_t^i)\right) \left(\sum_t (a_t^i s_t^i)\right)$
+\item $\theta \leftarrow \theta + \alpha \nabla_{\theta} J(\theta)$
+\end{enumerate}
+
+
+\begin{enumerate}
+  \item { The equation in the first box is for imitation gradient, weighted by reward }
+  \item { The 2nd equation  is for imitation learning }
+
+\end{enumerate}
+
+\begin{figure}[ht]
+  \includegraphics{./reinforce.tikz}
+  \caption{Imitation gradient and learning}
+  \ollabel{fig:function}
+\end{figure}
+
+This increases the likelihood of action when the rewards are high and decreases the likelihood of actions in trajectories with low reward.
+
+\subsection{Off-policy version of Policy Gradient }
+
+\begin{figure}[ht]
+  \includegraphics{./offpolicy.tikz}
+  \caption{Off-policy Gradient}
+  \ollabel{fig:function}
+\end{figure}
+
+
+q(x) is considered the old policy.$\mathbb{E}_{x \sim q(x)}\left[\frac{p(x)}{q(x)}\right] f(x)$ and we are sampling from the old policy and weighting by dividing the new policy by the old policy.
+
+\subsection{What if we want to use samples from $\overline{P}(\tau)$ ? }
+
+$J(\theta) = \mathbb{E}_{\tau \sim \overline{P}_{\theta}(\tau)}\left[\frac{P_{\theta}(\tau)}{\overline{P}(\tau)}\right]r(\tau)$
+
+\vskip 3ex
+Some of the probabilities cancel out.
+
+\vskip 3ex
+$\Huge\frac{P_{\theta}(\tau)}{\overline{P}(\tau)} = \frac{\cancel{P(s_1)}\Pi_{t=1}^T\pi_{\theta}(a_t,s_t)\cancel{P(s_{t+1} \mid (s_t,a_t))}}{\cancel{P(s_1)} \Pi_{t=1}^T\overline{\pi}_{\theta}(a_t,s_t) \cancel{P(s_{t+1} \mid (s_t,a_t))}}$
+
+
+\begin{figure}[ht]
+  \includegraphics{./offpolicyfinalform.tikz}
+  \caption{Off-policy Gradient}
+  \ollabel{fig:function}
+\end{figure}
+\end{document}
