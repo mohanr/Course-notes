@@ -77,7 +77,7 @@ are constants.
 $ \nabla \log  P_{\theta}(\tau) = \nabla_{\theta} \sum_t \log \pi_{\theta}(a_t,s_T)$
 
 \begin{tcolorbox}[fontupper=\Large,sharp corners, colback=green!10, colframe=green!10!pink]
-Expectation over trajectories sampled by or policy is $\mathbb{E}_{\tau \sim P_{\theta}(\tau)}$
+Expectation over trajectories sampled by our policy is $\mathbb{E}_{\tau \sim P_{\theta}(\tau)}$
 
 \vskip 3ex
 So the policy gradient now is  $ \nabla{\theta} J(\theta) = \mathbb{E}_{\tau \sim P_{\theta}(\tau)} \left[\sum_t^T \nabla_{\theta} \log \pi (a_t, s_t) \right] \left[\sum_t^T r(s_t, a_t) \right]$
