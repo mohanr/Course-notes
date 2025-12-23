@@ -1,0 +1,11 @@
+\begin{tikzpicture}
+\draw[fill=teal] (15,-5) circle (2ex);
+\draw[ultra thick,-stealth,decorate,decoration={snake,amplitude=3pt,pre length=2pt,post length=8pt}]
+(15,-5) -- ++(6,7);
+\draw[ultra thick,-stealth,decorate,decoration={snake,amplitude=3pt,pre length=2pt,post length=8pt}]
+(15,-5) -- ++(2,7);
+\draw[ultra thick,-stealth,decorate,decoration={snake,amplitude=3pt,pre length=2pt,post length=8pt}]
+(15,-5) -- ++(4,7);
+\draw[ultra thick,-stealth,decorate,decoration={snake,amplitude=3pt,pre length=2pt,post length=8pt}]
+(13,-7) -- (15,-5);
+\end{tikzpicture}
