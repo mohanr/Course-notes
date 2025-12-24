@@ -7,18 +7,16 @@
 \olsection{Actor Critic methods}
 \subsection{Value function}
 
-This is the future rewards starting at s and following $\pi$
+This is the future rewards starting at s and following policy $\pi$
 
 \scalebox{1.5}{%
-$\textstyle V^{\pi}a( s_t ) = \sum_{t^{\primt} = t}^T \mathbb{E}_{{s}_{t^{\prime}},a_{t^{\prime}} \sim \pi} \left[r(s_{t^{\prime}},a_{t^{\prime}}) \mid s_t \right] $
+$\textstyle V^{\pi}( s_t ) = \sum_{t^{\prime} = t}^T \mathbb{E}_{{s}_{t^{\prime}},a_{t^{\prime}} \sim \pi} \left[r(s_{t^{\prime}},a_{t^{\prime}}) \mid s_t \right] $
 }
 
 \subsection{Q-function $\mathbb{Q}^{\pi}$}
 
-This is the future rewards starting at s,taking a and following $\pi$
-
 \scalebox{1.5}{%
-$\textstyle V^{\pi}a( s_t ) = {\textcolor{blue}{\sum_{t^{\primt} = t}^T }}\mathbb{E}_{{s}_{t^{\prime}},a_{t^{\prime}} \sim \pi} \left[r(s_{t^{\prime}},a_{t^{\prime}}) \mid s_t \right] $
+$\textstyle Q^{\pi}( s_t,a_t ) = {\textcolor{blue}{\sum_{t^{\prime} = t}^T }}\mathbb{E}_{\pi} \left[r(s_t,a_t) \mid s_t,a_t \right] $
 }
 
 \subsubsection{Improving Policy Gradients}
@@ -26,7 +24,7 @@ $\textstyle V^{\pi}a( s_t ) = {\textcolor{blue}{\sum_{t^{\primt} = t}^T }}\mathb
 The gradient would be better if we increased the likelihood when $\mathbb{Q}$ is high and decreased the
 likelihood when $\mathbb{Q}$ is low
 
-$\nabla_{\theta} J(\theta) \sim \frac{1}{N} \sum_{i=1}^N \sum_{t=1}^T \nabla_{\theta} \log \pi{\theta} (a_t^i s_t^i) \mathbb{Q}(s_t^i a_t^i)$
+$\nabla_{\theta} J(\theta) \sim \frac{1}{N} \sum_{i=1}^N \sum_{t=1}^T \nabla_{\theta} \log \pi{\theta} (a_{i,t} s_{s,i) \mathbb{Q}(s_t^i a_t^i)$
 
 The explanation shown below is about this.
 
@@ -40,7 +38,7 @@ $\nabla_{\theta} J(\theta) = \mathbb{E}_{\tau \sim P_{\theta}(\tau)} \left[\nabl
 which is the average reward given by
 \vskip 3ex
 \scalebox{1.5}{%
-  $b = \frac{!}{N} \sum_{i=1}^N r(\tai)$
+  $b = \frac{!}{N} \sum_{i=1}^N r(\tau)$
 }
 \vskip 3ex
 If we subtract average reward we get negatie-gradients for below-average behaviour.
@@ -74,12 +72,48 @@ step forward and fall backwards.
 \subsubsection{Estimating future rewards using $\mathbb{Q}$ function}
 
 \scalebox{1.5}{%
-$\nabla_{\theta} J(\theta) \sim \frac{1}{N} \sum_{i=1}^N \sum_{t=1}^T \nabla_{\theta} \log \pi{\theta} (a_t^i s_t^i) \underbrace{\tcboxmath{r(s_{i,{t^{\prime}}}, a_{i,{t^{\prime}}})}}_{\parbox{3cm}{Extimate future rewards if we take {a_t} \text{ at } {s_t}}}$}
+$\nabla_{\theta} J(\theta) \approx \frac{1}{N} \sum_{i=1}^N \sum_{t=1}^T \nabla_{\theta} \log \pi{\theta} (a_{i,t} \mid s_{i,t}) \underbrace{\tcboxmath{r(s_{i,{t^{\prime}}}, a_{i,{t^{\prime}}})}}_{\parbox{3cm}{Extimate future rewards if we take {a_t} \text{ at } {s_t}}}$}
+
+
 
 True future rewards can be obtained by using the $\mathbb{Q}$ function like this.
 
+We will get much better results if the form of the gradient is like this.
 
-\scalebox{1.8}{%
-  $\sum_{t^{\primt} = t}^T\mathbb{E}\left r (s_{t^{\prime}}, a_{t^{\prime}}) \mid r(s_t, a_t)[\right] = \mathbb{Q}(s_t, a_t)$
- }
+\scalebox{1.5}{%
+$\nabla_{\theta} J(\theta) \approx \frac{1}{N} \sum_{i=1}^N \sum_{t=1}^T \nabla_{\theta} \log \pi{\theta} (a_{i,t} \mid s_{i,t}) \mathbb{Q}(a_{i,t} , s_{i,t}) $
+}
+
+\subsubsection{What about baselines ? }
+
+Once we start using the $\mathbb{Q}$ function we get this when we subtract the baseline.
+
+\vskip 3ex
+
+\scalebox{1.5}{%
+$\nabla_{\theta} J(\theta) \approx \frac{1}{N} \sum_{i=1}^N \sum_{t=1}^T \nabla_{\theta} \log \pi{\theta} (a_{i,t} \mid s_{i,t}) ( \mathbb{Q}(a_{i,t} , s_{i,t}) - \underbrace{\cancel{b}}_{\mathbb{V}^\pi (s_t)} )$
+}
+
+\vskip 3ex
+
+\begin{tcolorbox}[fontupper=\Large,sharp corners, colback=green!10, colframe=green!10!pink]
+$ b = \text{ average reward } = \frac{1}{N} \sum_i \mathbb{Q}(s_{i,t}, a_{i,t})$
+
+\vskip 3ex
+
+$\textstyle V( s_t ) = \mathbb{E}_{a_t \sim \pi_{\theta}(\bullet \mid s_t)} \left[\mathbb{Q}(s_t,a_t) \right] $
+\end{tcolorbox}
+
+\vskip 3ex
+Recall : $\mathbb{A}^{\pi}(a_t, s_t) =  \mathbb{Q}^{\pi}(a_t, s_t)-\mathbb{V}(s_t)$
+
+So with baseline we get
+
+\scalebox{1.5}{%
+$\nabla_{\theta} J(\theta) \approx \frac{1}{N} \sum_{i=1}^N \sum_{t=1}^T \nabla_{\theta} \log \pi{\theta} (a_{i,t} \mid s_{i,t}) \mathbb{A}^{\pi}(a_t, s_t)$
+}
+
+Better estimates of $\mathbb{A}$ will lead to less noisy gradients.
+
+
 \end{document}
