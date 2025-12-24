@@ -28,6 +28,7 @@ likelihood when $\mathbb{Q}$ is low
 
 $\nabla_{\theta} J(\theta) \sim \frac{1}{N} \sum_{i=1}^N \sum_{t=1}^T \nabla_{\theta} \log \pi{\theta} (a_t^i s_t^i) \mathbb{Q}(s_t^i a_t^i)$
 
+The explanation shown below is about this.
 
 \subsubsection{Introducing baselines}
 
@@ -67,4 +68,18 @@ $ = b\underbrace{\nabla_{\theta} \underbrace{\int P_{\theta}(\tau) d\tau}_\text{
   \ollabel{fig:function}
 \end{figure}
 
+This will ameliorate the situation caused when the robot takes a small
+step forward and fall backwards.
+
+\subsubsection{Estimating future rewards using $\mathbb{Q}$ function}
+
+\scalebox{1.5}{%
+$\nabla_{\theta} J(\theta) \sim \frac{1}{N} \sum_{i=1}^N \sum_{t=1}^T \nabla_{\theta} \log \pi{\theta} (a_t^i s_t^i) \underbrace{\tcboxmath{r(s_{i,{t^{\prime}}}, a_{i,{t^{\prime}}})}}_{\parbox{3cm}{Extimate future rewards if we take {a_t} \text{ at } {s_t}}}$}
+
+True future rewards can be obtained by using the $\mathbb{Q}$ function like this.
+
+
+\scalebox{1.8}{%
+  $\sum_{t^{\primt} = t}^T\mathbb{E}\left r (s_{t^{\prime}}, a_{t^{\prime}}) \mid r(s_t, a_t)[\right] = \mathbb{Q}(s_t, a_t)$
+ }
 \end{document}
