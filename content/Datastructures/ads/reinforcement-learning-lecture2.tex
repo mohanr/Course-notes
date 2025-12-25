@@ -113,7 +113,22 @@ So with baseline we get
 $\nabla_{\theta} J(\theta) \approx \frac{1}{N} \sum_{i=1}^N \sum_{t=1}^T \nabla_{\theta} \log \pi{\theta} (a_{i,t} \mid s_{i,t}) \mathbb{A}^{\pi}(a_t, s_t)$
 }
 
+\section{Offline RL outline }
+
 Better estimates of $\mathbb{A}$ will lead to less noisy gradients.
+\vskip 3ex
+${\nabla_{\theta} J(\theta) \approx \frac{1}{N} \sum_{i=1}^N \sum_{t=1}^T \nabla_{\theta} \log \pi{\theta} (a_{i,t} \mid s_{i,t})\tcboxmath[
+  `colback=teal,
+        colframe=green!75!black,
+        boxrule=0.5pt,
+        arc=2mm
+] {\mathbb{A}^{\pi}(a_t, s_t)}}$
 
+First initialize the policy ( randomly with imitation learning and heuristics )
 
+\begin{figure}[ht]
+  \includegraphics{./onlinerl.tikz}
+  \caption{Online RL}
+  \ollabel{fig:function}
+\end{figure}
 \end{document}
