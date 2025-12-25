@@ -105,7 +105,7 @@ $\textstyle V( s_t ) = \mathbb{E}_{a_t \sim \pi_{\theta}(\bullet \mid s_t)} \lef
 \end{tcolorbox}
 
 \vskip 3ex
-Recall : $\mathbb{A}^{\pi}(a_t, s_t) =  \mathbb{Q}^{\pi}(a_t, s_t)-\mathbb{V}(s_t)$
+Recall : $\mathbb{A}^{\pi}(a_t, s_t) =  \mathbb{Q}^{\pi}(a_t, s_t)-\mathbb{V}^{\pi}(s_t)$
 
 So with baseline we get
 
@@ -126,9 +126,35 @@ ${\nabla_{\theta} J(\theta) \approx \frac{1}{N} \sum_{i=1}^N \sum_{t=1}^T \nabla
 
 First initialize the policy ( randomly with imitation learning and heuristics )
 
+\vskip 3ex
+\section{Estimated expected return}
+
+Should we fit $\mathbb{V}^{\pi},\mathbb{Q}^{\pi},\mathbb{A}^{\pi} \text{ ?}$. We are going to fit $\mathbb{V}^{\pi}$.
+
+
+Recall : $\mathbb{A}^{\pi}(s_t, a_t) =  \mathbb{Q}^{\pi}(s_t, a_t)-\mathbb{V}^{\pi}(s_t)$. There is a way to turn this equation that only depends on $\mathbb{V}^{\pi}$. $\mathbb{Q}^{\pi}(a_t, s_t)$ starts at state s, takes action a and sums the rewards. So we can write the equation like this.
+\eject
+$ \underbrace{\mathbb{Q}^{\pi}(s_t, a_t)}_{\parbox{7cm}{ Rewards at the current time step and the value starting from s_{t+1}}}$
+
+
 \begin{figure}[ht]
   \includegraphics{./onlinerl.tikz}
   \caption{Online RL}
   \ollabel{fig:function}
 \end{figure}
+
+So we can rewrite the equations like this.
+
+\scalebox{1.5}{%
+$\mathbb{Q}^{\pi}(s_t, a_t) = \sum_{t^{\prime} = t}^T \mathbb{E}_{\pi_{\theta}} \left[r(s_{t^{\prime}},a_{t^{\prime}}) \mid  (s_t,a_t)\right]$
+}
+\vskip 3ex
+\begin{tcolorbox}[fontupper=\Large,sharp corners, colback=gray!20, colframe=Aquamarine!10]
+$ r(s_t,a_t) + \mathbb{E}_{s_{t+1} \sim P(\bullet \mid (s_t,a_t))} \left[\mathbb{V}_{s_{t+1}}\right] \text{ Use the sampled s_{t+1} }$
+\end{tcolorbox}
+\vskip 3ex
+\begin{tcolorbox}[fontupper=\Large,sharp corners, colback=gray!20, colframe=Aquamarine!10]
+$\mathbb{A}^{\pi}(s_t, a_t) = r(s_t, a_t) + \mathbb{V}^{\pi}(s_{t+1}) - \mathbb{V}^{\pi}(s_t)$
+\end{tcolorbox}
+
 \end{document}
