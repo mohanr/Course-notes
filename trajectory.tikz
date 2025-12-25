@@ -1,0 +1,16 @@
+\begin{tikzpicture}
+\newcommand\DrawControl[3]{
+  node[#2,circle,fill=#2,inner sep=2pt,label={above:$#1$},label={[black]below:{\footnotesize#3}}] at #1 {}
+}
+\draw[help lines] (0,0) grid (8,5);
+\draw[ultra thick,blue]
+  (1,0)
+    .. controls (1,1) and (2,0.5)  .. (3,2);
+\draw[ultra thick,blue]
+  (3,2)
+    .. controls (2.8,2.5) and (3.2,2.8)  .. (5,3);
+\draw[ultra thick,-stealth,decorate,decoration={snake,amplitude=2pt,
+pre length=2pt,post length=8pt}]
+(1,0) -- ++(4,3);
+
+\end{tikzpicture}\hfill

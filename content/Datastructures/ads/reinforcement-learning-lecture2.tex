@@ -149,12 +149,34 @@ So we can rewrite the equations like this.
 $\mathbb{Q}^{\pi}(s_t, a_t) = \sum_{t^{\prime} = t}^T \mathbb{E}_{\pi_{\theta}} \left[r(s_{t^{\prime}},a_{t^{\prime}}) \mid  (s_t,a_t)\right]$
 }
 \vskip 3ex
-\begin{tcolorbox}[fontupper=\Large,sharp corners, colback=gray!20, colframe=Aquamarine!10]
-$ r(s_t,a_t) + \mathbb{E}_{s_{t+1} \sim P(\bullet \mid (s_t,a_t))} \left[\mathbb{V}_{s_{t+1}}\right] \text{ Use the sampled s_{t+1} }$
+\begin{tcolorbox}[fontupper=\Large,sharp corners, colback=teal!20, colframe=Aquamarine!10!blue]
+$ r(s_t,a_t) + \mathbb{E}_{s_{t+1} \sim P(\bullet \mid (s_t,a_t))} \left[\mathbb{V}^{\pi}_{s_{t+1}}\right] $
 \end{tcolorbox}
+Use the sampled s_{t+1}
 \vskip 3ex
-\begin{tcolorbox}[fontupper=\Large,sharp corners, colback=gray!20, colframe=Aquamarine!10]
+\begin{tcolorbox}[fontupper=\Large,sharp corners, colback=teal!20, colframe=Aquamarine!10!blue]
 $\mathbb{A}^{\pi}(s_t, a_t) = r(s_t, a_t) + \mathbb{V}^{\pi}(s_{t+1}) - \mathbb{V}^{\pi}(s_t)$
 \end{tcolorbox}
 
+\subsection{Estimating $\mathbb{V}^{\pi}$}
+\subsubsection{ Version 1 : Monte carlo estimation }
+
+\begin{enumerate}
+
+\item $ \text{Original single sample estimate }\mathbb{V}^{\pi}(s_t) = \sum_{t^{\prime} = t}^T r({s}_{t^{\prime}},a_{t^{\prime}})$
+\item $ \text{Multisample estimate (but can't reset the world in practice) }\mathbb{V}^{\pi}(s_t) \approx \frac{1}{N} \sum_{i=1}^N \sum_{t=1}^T \sum_{t^{\prime} = t}^T r({s}_{t^{\prime}},a_{t^{\prime}})$
+
+\end{enumerate}
+
+Step 1 : Aggregate dataset of single sample estimates
+
+\scalebox{1.5}{%
+$\left(s_{i,t}, \underbrace{\sum_{t^{\prime} = t}^T r(s_{i,t^{\prime}},a_{i,t^{\prime}})}_{y_{i,t}}\right)$
+}
+
+
+Step 2 :
+\scalebox{1.5}{%
+$ \mathcal{L}(\phi) = \frac{1}{2} \sum_i \left\Vert \hat{\matchbb{V}}_{\phi}^{\pi}(s_i) - y_i\left\right\Vert_2^2$
+}
 \end{document}
