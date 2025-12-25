@@ -1,18 +1,18 @@
-\begin{tikzpicture}[node distance = 5mm and 22mm]
-   \node [inner sep=0pt,minimum width=5cm,minimum height=2cm,outer sep=0pt,clip,rounded corners=0.5cm]
-   (pict) at (0,1) {Run policy to collect batch of data}];
+\begin{tikzpicture}[node distance = 15mm and 22mm]
+   \node [text width = 4cm,inner sep=0pt,minimum width=5cm,minimum height=2cm,outer sep=0pt,clip,rounded corners=0.5cm]
+   (pict) at (0,1) {\large Run policy to collect batch of data}];
    \node[draw=red,thick,fit=(pict),rounded corners=.55cm,inner sep=2pt]
    {};
 
-   \node [inner sep=0pt,minimum width=5cm,minimum height=2cm,outer sep=0pt,clip,
+   \node [text width = 4cm,inner sep=0pt,minimum width=5cm,minimum height=2cm,outer sep=0pt,clip,
    rounded corners=0.5cm] (pict1)
-   at (7,1) {Fit model to estimate expected return}];
+   at (7,1) {\large Fit model to estimate expected return}];
    \node[draw=olive,thick,fit=(pict1),rounded corners=.55cm,inner sep=2pt]    {};
    {};
 
    \node [inner sep=0pt,minimum width=5cm,minimum height=2cm,outer sep=0pt,clip,
    rounded corners=0.5cm] (pict2)
-   at (5,-1.9) {Improve policy}];
+   at (5,-1.9) {\large Improve policy}];
    \node[draw=olive,thick,fit=(pict2),rounded corners=.55cm,inner sep=2pt]    {};
    {};
    \draw  [-latex,thick] (pict) --  (pict1) ;
