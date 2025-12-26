@@ -15,7 +15,7 @@
       [0, acc, name = L1,  for descendants=border
          [0,acc[0,acc, name = L6] [1,acc, name = L7]] [1, new, name = L10 [0, new, name = L9] [-, rej] ]
       ]
-      [1, acc for descendants=border
+      [1, acc, for descendants=border
         [0, acc, name = L3 [0,acc, name = L2] [1,acc,name = L8]]
         [1,acc, name = L4 [-,rej] [1,acc, name = L5]]
       ]
