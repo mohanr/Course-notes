@@ -194,30 +194,43 @@ Ideal target is the true sum of rewards. This is equal to the reward at the curr
 
 \begin{tcolorbox}[fontupper=\Large,sharp corners, colback=gray!20, colframe=green!10!pink]
  $ \text{ Ideal target : }\sum_{t^{\prime} = t}^T \mathbb{E}_{\pi_{\theta}}$
- $r(s_{i,t^{\prime}},a_{i,t^{\prime}}) \mid  (s_{i,t}) \approx r(s_{i,t},a_{i,t})$
- $+ \sum_{t^{\prime} = t + 1}^T \mathbb{E}_{\pi_{\theta}} r(s_{t^{\prime}},a_{t^{\prime}}) \mid (s_{i,t+!})$
-$r(s_{i,t},a_{i,t})\mathbb{V}^{\pi}(s_{i,t+1}) \approx r(s_{i,t},a_{i,t})\underbrace{\hat{\mathbb{V}}_{\phi}^{\pi}(s_{i,t+1})}_{\text{Fitted value function}}$
+ $\left[r(s_{i,t^{\prime}},a_{i,t^{\prime}}) \mid  (s_{i,t})\right] \approx r(s_{i,t},a_{i,t})$
+ $+ \sum_{t^{\prime} = t + 1}^T \mathbb{E}_{\pi_{\theta}} \left[r(s_{t^{\prime}},a_{t^{\prime}}) \mid (s_{i,t+!})\right]$
+$ \approx r(s_{i,t},a_{i,t})\mathbb{V}^{\pi}(s_{i,t+1}) \approx r(s_{i,t},a_{i,t})\underbrace{\hat{\mathbb{V}}_{\phi}^{\pi}(s_{i,t+1})}_{\text{Fitted value function}}$
 \end{tcolorbox}
 
 Step 1 : Aggregate dataset of ``bootstrapped'' estimates
 This means that we are bootstrapping off of our own estimate of the value function as part of the learning process.
 
 training data :
-$\left(s_{i,t},r(s_{i,t},a_{i,t}) + \underbrace{\hat{\mathbb{V}}_{\phi}^{\pi}(s_{i,t+1})}_{\text{Fitted value function}}\right)$
+\scalebox{1.5}{%
+$\left(s_{i,t},r(s_{i,t},a_{i,t}) + \underbrace{\hat{\mathbb{V}}_{\phi}^{\pi}(s_{i,t+1})}_{\text{Fitted value function}}\right) $
+
+}
+Update labels  every gradient step
 
 
-Step 2 : Supervised learning to fit estimated value function
+Step 2 : Supervised learning to fit estimated value function. This is also known as temporal difference learning.
 \scalebox{1.5}{%
 
-$ \mathcal{L}(\phi) = \frac{1}{2} \sum_i \left\Vert \hat{\matchbb{V}}_{\phi}^{\pi}(s_i) - y_i\left\right\Vert_2^2
-  {Laplace transform}$
+$ \mathcal{L}(\phi) = \frac{1}{2} \sum_i \left\Vert \hat{\matchbb{V}}_{\phi}^{\pi}(s_i) - y_i\left\right\Vert_2^2 $
 }
 
+\section{A full Algorithm walkthrough}
 
 
+\begin{enumerate}
 
+\item $ \text{Sample batch of data }(s_1,a_1, \dots, s_T,a_T) ) from \pi_{\theta}$
+\item $\mathbb{V}}_{\phi}^{\pi_{\theta}} \text{to summed rewards of data}$
+\item $\hat{\mathbb{A}}^{\pi_{\theta}}(s_{t,i},a_{t,i}) + \hat{\mathbb{V}}}_{\phi}^{\pi_{\theta}}(s_{t+1,i}) + \hat{\mathbb{V}}}_{\phi}^{\pi_{\theta}}(s_{t,i})$
+\item $\nabla_{\theta} J(\theta) \approx \sum_{t,i}\nabla_{\theta} \log \pi_{\theta} (a_{t,i} \mid s_{t,i})\hat{\mathbb{A}}^{\pi_{\theta}}(s_{t,i},a_{t,i})$
+\end{enumerate}
 
+\begin{tcolorbox}[fontupper=\Large,sharp corners, colback=gray!20, colframe=green!10!pink]
+$y_{i,t+1}\sum_{t^{\prime} = t}^{t+n+1} r(s_{i,t^{\prime}},a_{i,t^{\prime}}) + \gamma^n \hat{\mathbb{V}}}_{\phi}^{\pi_{\theta}} s_{i,t+n}$
+$\frac{1}{2} \sum_i \left\Vert \hat{\mathbb{V}}_{\phi}^{\pi}(s_i) - y_i\left\right\Vert_2^2 \forall t,i$
 
-
+\end{tcolorbox}
 
 \end{document}
