@@ -199,4 +199,25 @@ Ideal target is the true sum of rewards. This is equal to the reward at the curr
 $r(s_{i,t},a_{i,t})\mathbb{V}^{\pi}(s_{i,t+1}) \approx r(s_{i,t},a_{i,t})\underbrace{\hat{\mathbb{V}}_{\phi}^{\pi}(s_{i,t+1})}_{\text{Fitted value function}}$
 \end{tcolorbox}
 
+Step 1 : Aggregate dataset of ``bootstrapped'' estimates
+This means that we are bootstrapping off of our own estimate of the value function as part of the learning process.
+
+training data :
+$\left(s_{i,t},r(s_{i,t},a_{i,t}) + \underbrace{\hat{\mathbb{V}}_{\phi}^{\pi}(s_{i,t+1})}_{\text{Fitted value function}}\right)$
+
+
+Step 2 : Supervised learning to fit estimated value function
+\scalebox{1.5}{%
+
+$ \mathcal{L}(\phi) = \frac{1}{2} \sum_i \left\Vert \hat{\matchbb{V}}_{\phi}^{\pi}(s_i) - y_i\left\right\Vert_2^2
+  {Laplace transform}$
+}
+
+
+
+
+
+
+
+
 \end{document}
