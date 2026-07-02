@@ -1,0 +1,203 @@
+
+
+\documentclass[../../../include/open-logic-chapter]{subfiles}
+
+\begin{document}
+
+\olchapter{lecture1}{lecture1}{Lecture I}
+
+\olsection{Introduction}
+
+\subsection{Meaning of Probability in Higher Dimensions}
+
+\scalebox{1.5}{%
+  $ x \sim \mathcal{N}(\sigma, \sum )$
+}
+All of these values are vectors and matrices in high dimensions.
+
+\scalebox{1.5}{%
+  $ x^{(i)} \sim \mathcal{N}(\sigma^{(i)}, \sum^{(i,i)} ) \text{ and  }
+ \mathrm{Cov} ( x^{(i)},x^{(i)}) = \sum^{(i,j)}$
+}
+
+But we will be dealing only with $\textbf{Isotropic}$ Gaussian matrices.
+
+$\Large \sum = {\sigma}^{2}\mathcal{I} = \begin{bmatrix} {\sigma}^{2} & 0 & 0 & \dots  & 0 \\
+    0 & {\sigma}^{2} & 0 & \dots  & 0 \\ \vdots & \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & 0 & \dots  & {\sigma}^{2} \end{bmatrix} $
+
+This is to simplify the math so that the \textbf{variance} is same in all directions.
+
+\subsection{Mathematical formalism of the forward Process}
+
+\scalebox{1.5}{%
+  $ q(x^t \mid x^{t-1}) = \mathcal{N}(\sqrt{ (1 - {\beta}_t)} ( x_{t - 1} ), {\beta}_t \mathrm{I})$
+
+}
+
+The following needs more explanation which may appear later in the document.
+
+The following is just parameterization.
+
+\scalebox{1.5}{%
+  $ x_t =\underbrace{(\sqrt{ (1 - {\beta}_t)}}_{{\alpha}_t} ( x_{t - 1} ) + \underbrace{\sqrt{ {\beta}_t }}_{{\alpha}_t} {\epsilon_t}$}
+
+Multiplying we get
+
+
+\scalebox{1.5}{%
+$ (\sqrt{{\alpha}_t {\alpha}_{t-1}})  x_{t-2}  + \sqrt{{\alpha}_t (1 -{\alpha}_{t-1})} {\epsilon}_{t-1} + \sqrt{(1 -{\alpha}_t)} {\epsilon}_t$
+}
+
+
+It appears that two random variables drawn from the same Gaussian are combined to get a variance like this.
+
+
+The two quantities are $\textbf{ squared }$ and added.
+
+
+\scalebox{1.5}{%
+${\alpha}_t (1 -{\alpha}_{t-1}) + (1 -{\alpha}_t) = \underbrace{1 -{\alpha}_t {\alpha}_{t-1}}_\text{Variance}$
+}
+\vskip 3ex
+Since we combine random variables like this
+
+\vskip 3ex
+we get
+\vskip 3ex
+\scalebox{1.5}{%
+$(\sqrt{{\alpha}_t {\alpha}_{t-1}})  x_{t-2}  + \overbrace{(\sqrt{1 -{\alpha}_t {\alpha}_{t-1}})}^\text{Stanard Deviation of the Variance shown above} \epsilon $
+}
+\vskip 3ex
+Therefore we can have a noisy image at step $ \textbf{t} $ as a function of
+the clean image at step $\textbf{ 0  }$
+
+\begin{tcolorbox}[fontupper=\Large,sharp corners, colback=teal!20, colframe=Aquamarine!10!blue]
+$q(x^t \mid x^{t-1}) = \mathcal{N}(\sqrt{{\bar{\alpha}_t}} x_0 , 1 - {\bar{\alpha}_t}}{\mathrm{I}})$
+
+with
+
+
+${\bar{\alpha}_t}} = \prod_{i=1}^t {\alpha}_i \text{ and }  {\alpha}_t} = 1 - {\beta}_t$
+
+\end{tcolorbox}
+
+\begin{tcolorbox}[fontupper=\Large,sharp corners, colback=teal!20, colframe=Aquamarine!10!blue]
+  Variance of sum of independent Gaussians is sum of respective variances
+\end{tcolorbox}
+\vskip 3ex
+
+
+
+\subsection{Objective}
+$\Large  \underbrace{\max_{\theta}}_{\substack{\uparrow \\ \text{Find } \theta \text{ that} \\ \text{maximizes}}} \quad \underbrace{\log P_{\theta}}_{\substack{\uparrow \\ \text{log likelihood} \\ \text{under model}}} \quad
+\underbrace{(x_0)}_{\substack{\uparrow \\ \text{training} \\ \text{data}}}
+$
+\end{array}
+
+\subsection{Joint Probability Distribution}
+
+$ \Large P( x_1, x_2 ) = P( x_1 ) x \underbrace{P(x_! \mid x_2)}_\text{Conditional Probability}$
+
+\subsection{Marginalization}
+
+$ P(x_!) = \int P(x_! \mid x_2)$
+
+\vskip 3ex
+It appears that we couldn't possibly marginalize over all possible trajectories using $ \log P_{\theta}(x_0) = \log \int P_{\theta}(x_0,x_{1:T}) dx_{1:T}$
+
+\vskip 3ex
+This is intractable.
+
+\subsection{Introduction of $\textbf{Evidence Lower Bound}$}
+
+\scalebox{1.5}{%
+$= \int \left(\frac{P_{\theta}(x_{0:T}) q(x_{1:T},x_0)}{\underbrace{q(x_{1:T},x_0)}_{\text{Forward process we have defined given the clean image} x_0}}\right)dx_{1:T}$
+}
+
+\vskip 3ex
+
+This is the same as the expectation which is written like this.
+
+\scalebox{1.5}{%
+$ = \mathrm{E_{\underbrace{ x_{1:T} \sim q(x_{1:T},x_0)}_\text{Sampled}}} \left(\frac{P_{\theta}(x_{0:T})}{q(x_{1:T},x_0)}\right)$
+}
+
+\vskip 3ex
+\subsubsection{Jensen's Inequality}
+
+\vskip 3ex
+
+\scalebox{1.5}{%
+$ = \log \left[\mathrm{E} \left(\frac{P_{\theta}(x_{0:T})}{q(x_{1:T},x_0)}\right)\right] \geq
+  \mathrm{E} \left[\log \left(\frac{P_{\theta}(x_{0:T})}{q(x_{1:T},x_0)}\right)\right]$
+}
+
+It appears that due to the chain rule the actual equation is like this. This has to be learnt again.
+
+\vskip 3ex
+\begin{tcolorbox}[fontupper=\Large,sharp corners, colback=teal!20, colframe=Aquamarine!10!blue]
+
+$ = \mathrm{E}_{x_0 \sim q(x_0)} \left(\log{P_{\theta}(x_0)}\right) \geq   \mathrm{E}_{x_{0:T} \sim q(x_{0:T})}\right)\right] \left[\log \left(\frac{P_{\theta}(x_{0:T})}{q(x_{1:T} \mid x_0)}\right)\right]$
+\end{tcolorbox}
+
+\vskip 3ex
+This also seems to indicate that we don't sum over all the trajectories but only those sampled from the forward process $\textbf{ q }$.
+
+\subsubsection{KL Divergence}
+
+$\textbf{ELBO} = - \Sigma_{t=2}^T = \mathrm{KL} \left( q(x_{t-1} \mid x_t, x_0) \parallel P_{\theta}(x_{t-1} \mid x_t)\right) + \textbf{ Some other terms }$
+\vskip 3ex
+\subsubsection{Show Lower Bound is tractable}
+
+$ q(\overbrace{x_{t-1}}^\text{Less Noisy} \mid \underbrace{x_t}_\text{More noisy image}, \underbrace{x_0}_\text{Clean image}) \text{ is tractable }$
+
+The question is this. What is the distribution of the less noisy image given the more noisy image along with the clean image ?
+
+\subsubsection{Bayes' Rule}
+\vskip 3ex
+\scalebox{1.5}{%
+$ \underbrace{\mathrm{P(A \mid B)}}_{\text{Posterior}} = \frac{\mathrm{P(B \mid A) P(B)}}{ \underbrace{P(B)}_{\text{Marginal Likelihood}}}$
+}
+
+$q( x_{t-1} \mid x_t, x_0 ) = \frac{q( x_t \mid x_{t-1}, x_0 ) q(x_{t-1} \mid x_0)}{q(x_t \mid x_0)} $
+
+\vskip 3ex
+
+We can write these equations now based on Bayes' rule.
+
+\scalebox{1.5}{%
+$q(x_{t-1} \mid x_t, x_0) = \frac{q(x_t \mid x_{t-1}, x_0)  \overbrace{q(x_{t-1} \mid x_0)}^{\text{Tractable}}}{\underbrace{q(x_t \mid x_0)}_{\text{Tractable and fixed (Constant)}}}$
+}
+
+\vskip 3ex
+$\textbf{q  is markovian}$
+\vskip 3ex
+$\Large \textbf{ And }  q(x_{t-1} \mid x_t, x_0) \propto q(x_t \mid x_{t-1})q(x_t \mid  x_0)
+
+\vskip 3ex
+As far as the right side of the approximation shown above is concerned, the product of the probabilities of two Gaussians is also Gaussian.
+
+\vskip 3ex
+So the first term in the $\textbf{ ELBO }$ derivation is tractable.
+Now we have to show that the second term is too.
+
+\vskip 3ex
+
+We assume $\Large P_{\theta}$ is Gaussian.
+\scalebox{1.5}{%
+$P_{\theta}(x_{t-1} \mid x_t) = \mathrm{N}(\mu_{\theta}(x_t,t),\Sigma_{\theta}(x_t,t) )$
+}
+\vskip 3ex
+
+\begin{tcolorbox}[fontupper=\Large,sharp corners, colback=teal!20, colframe=Aquamarine!10!blue]
+$\text{ Justification If } q(x_t \mid x_{t-1}) \text{ is Gaussian, then } q(x_{t-1} \mid x_t) \text{ is approx. Gaussian }$
+\end{tcolorbox}
+\vskip 3ex
+\subsubsection{Final Loss}
+\vskip 3ex
+\scalebox{1.5}{%
+$ \mathcal{L}_{DDPM} (\theta) = \mathrm{E}_{t \sim Unif,x_0 \sim q_0(x_0), \epsilon \sim \mathcal{N}(0,{I}_d)} \left[ \lVert{\epsilon}^{\theta} (\sqrt{{\bar{\alpha}_t}} x_0  + \sqrt{1 - {\bar{\alpha}_t}} \epsilon, t - \epsilon )\rVert_2^2 \right]$
+}
+
+This seems to mean that if we have a noisy images and the original noise, we can compute the actual noise that was added.
+\end{document}

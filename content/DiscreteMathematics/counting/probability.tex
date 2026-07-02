@@ -1,0 +1,83 @@
+
+\documentclass[../../../include/open-logic-chapter]{subfiles}
+
+\begin{document}
+
+\olchapter{prob}{probability}{Definitions}
+
+\olsection{Distributions}
+
+\subsection{Marginal distribution}
+
+The marginal distribution os a subset of a set of random variables is the probability distribution of the variables contained in the subset
+
+$p(x) = \int p(x,{\underbrace{z}_\text{Taking the integral over z to marginalize x}}) dz$
+\vskip 3ex
+Example for $ p(x) = 1$
+%% \vspace*{-\baselineskip}
+
+\begin{table}[ht]
+\begin{tabular}{lllll}
+                    &   & \multicolumn{3}{c}{y}                                                                                                                                           \\
+                    &   & 1                                                   & 2                                                   & 3                                                   \\
+                    & 1 & \cellcolor[HTML]{C0C0C0}{\color[HTML]{6200C9} 0.32} & \cellcolor[HTML]{C0C0C0}{\color[HTML]{6200C9} 0.03} & \cellcolor[HTML]{C0C0C0}{\color[HTML]{6200C9} 0.01} \\
+                    & 2 & 0.06                                                & 0.24                                                & 0.02                                                \\
+\multirow{-3}{*}{x} & 3 & 0.02                                                & 0.03                                                & 0.27
+\end{tabular}
+\end{table}
+
+\subsection{Expected value}
+The expected value is the arithmetic mean of the possible values a random variable
+can take, weighted by the probability of those outcomes.
+
+$\mathbb{E}_{p(x)} = \int x p(x) dx$
+
+\subsection{Bayes Theorem}
+
+$p(x \div z) = left(\frac{p(z \div x) p(z)}{p(x)} \right)$
+$p(x \div z)p(x) = p(z \div x) p(z) = \underbrace{p(x,z)}_\text{Joint probability} = \frac{0.03}{0.36}$
+
+This is equal to the Joint probability.
+\begin{table}[ht]
+\begin{tabular}{lllll}
+                    &   & \multicolumn{3}{l}{y}                                                                                                                                           \\
+                    &   & 1                                                   & 2                                                   & 3                                                   \\
+                    & 1 & \cellcolor[HTML]{3166FF}{\color[HTML]{FFFFFF} 0.32} & \cellcolor[HTML]{3166FF}{\color[HTML]{000000} 0.03} & \cellcolor[HTML]{3166FF}{\color[HTML]{FFFFFF} 0.01} \\
+                    & 2 & 0.06                                                & 0.24                                                & 0.02                                                \\
+\multirow{-3}{*}{x} & 3 & 0.02                                                & 0.03                                                & 0.27
+\end{tabular}
+\end{table}
+
+
+\subsection{Jensen's inequality}
+
+$\mathit{f}$ is a convex function if $\mathit{f}(tx_1 + (1 - t)x_2) \leq t\mathit{f}(x_1) + (1 -t)\mathit{f}(x_2)  \forall x_1,x_2 \text{ and } t \in [0,1]$
+
+\subsubsection{3D points}
+
+$\mathit{f} \left( \sum_i t_i x_i\right ) \leq \sum_i t_i \mathit{f}(x_i)$
+
+\subsubsection{Replacing data points with probabilities}
+
+If we have probabilities then it is the same as before and the equation is this.
+
+$\mathit{f}\left( \mathbb{E}_{p(x)}[x]\right) \leq \mathbb{E}_{p(x)}[\mathit{f}(x)]$
+
+\section{Variational Auto Encoder}
+
+For all given real image x, we want to maximize the marginal probability
+
+$p(x) = \int p(x,z) dz = \int p(x \mid z ) p(x) dz$
+
+How to compute the integral ? It is intractable.
+
+\scalebox{1.9}{%
+$p(x) = \frac{p(x,z)}{p(z \mid x)} = \frac{p(x \mid z)p(z)}{p(z \mid x)}$
+ }
+
+\scalebox{1.9}{%
+p(z \mid x)
+ } is the unknown conditional distribution.
+
+\section{Evidence Lower bound}
+\end{document}
