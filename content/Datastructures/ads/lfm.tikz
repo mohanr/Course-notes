@@ -1,0 +1,23 @@
+\usetikzlibrary{arrows.meta}
+
+ \begin{tikzpicture}[
+    >={Stealth},
+    or/.style={brown!80!orange!100},
+    dot/.style={circle,draw,fill,inner sep=0pt,minimum size=3pt},
+ ]
+    % ~~~ axes ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    \draw[<->] (0,3) node[anchor=south]{x} --
+                (0,0) -- (4,0)node[anchor=west]{y};
+
+    % ~~~ curves ~~~~~~~~~~~~~~~~~~~~~~
+    \draw[or] (0,2.2) node[dot]{} to[out=-35,in=180]
+                      node[above       ]{}    (3,0.7);
+    \draw     (0,1.5) node[dot]{} to[out=-35,in=180]
+                      node[above,pos=.7]{}    (3,0);
+    \draw[or] (3,0.7) node[dot]{} to[out=-25,in=180]
+                      node[above       ]{$L_{CFM}$}    (4.5,1.6);
+    \draw     (3,0) node[dot]{} to[out=-25,in=180]
+                      node[above,pos=.7]{$L_{FM}$}    (4.5,0.9);
+    \draw[--] (3,0.7) -- (3,0)
+
+ \end{tikzpicture}
