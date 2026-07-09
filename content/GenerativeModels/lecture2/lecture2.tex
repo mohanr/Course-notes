@@ -1,0 +1,45 @@
+
+\documentclass[../../../include/open-logic-chapter]{subfiles}
+
+\begin{document}
+
+\olchapter{lecture2}{lecture2}{Lecture 2}
+
+\olsection{Introduction}
+
+\section{Recap}
+
+\scalebox{1.5}{%
+\begin{equation}
+  \begin{array}{l}
+ \mathcal{L}_{DDPM} (\theta) = \\ \mathrm{E}_{t \sim Unif,x_0 \sim q_0(x_0), \epsilon \sim \mathcal{N}(0,{I}_d)} \\ \left[ \lVert\overbrace{{\epsilon}^{\theta}}^{\parbox{2cm}{Noise predictor}} \underbrace{(\sqrt{{\bar{\alpha}_t}} x_0  + \sqrt{1 - {\bar{\alpha}_t}} \epsilon}_\text{Noised image}, \overbrace{t}^{\parbox{1cm}{Noise level}} - \overbrace{\epsilon}^{\parbox{1cm}{Actual level}} )\rVert_2^2 \right]
+ \end{array}
+\end{equation}
+}
+
+
+\section{Score Matching}
+
+\subsection{Intuition}
+
+
+$\Large \sum = {\sigma}^{2}\mathcal{I} = \begin{bmatrix} {\sigma}^{2} & 0 & 0 & \dots  & 0 \\
+    0 & {\sigma}^{2} & 0 & \dots  & 0 \\ \vdots & \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & 0 & \dots  & {\sigma}^{2} \end{bmatrix} $
+
+
+\begin{figure}[h]
+\centering
+% Use the relevant command for your figure-insertion program
+% to insert the figure file.
+% For example, with the option graphics use
+\includegraphics[scale=1]{shapes}
+%
+% If not, use
+%\picplace{5cm}{2cm} % Give the correct figure height and width in cm
+%
+  \caption{Gradient of Probability Distribution function}
+\end{figure}
+
+
+
+\end{document}
