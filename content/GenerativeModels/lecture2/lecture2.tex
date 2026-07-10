@@ -23,8 +23,8 @@
 \subsection{Intuition}
 
 
-$\Large \sum = {\sigma}^{2}\mathcal{I} = \begin{bmatrix} {\sigma}^{2} & 0 & 0 & \dots  & 0 \\
-    0 & {\sigma}^{2} & 0 & \dots  & 0 \\ \vdots & \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & 0 & \dots  & {\sigma}^{2} \end{bmatrix} $
+$\Huge \nabla \mathrm{f(x)} = \begin{bmatrix} \frac{{\partial}f}{x_1}} \\
+    \frac{{\partial}f}{x_2}} \\ \vdots \\ \frac{{\partial}f}{x_n} \end{bmatrix} $
 
 
 \begin{figure}[h]
@@ -40,6 +40,32 @@ $\Large \sum = {\sigma}^{2}\mathcal{I} = \begin{bmatrix} {\sigma}^{2} & 0 & 0 & 
   \caption{Gradient of Probability Distribution function}
 \end{figure}
 
+The space has multiple dimensions with larger values of $P(x)$ in some areas
+and smaller values in others.
+\vskip 3ex
+The question is this. How do we move $x$ to a point where $P(x)$ is higher.
+\vskip 3ex
+We need to calculate the gradient.
+\vskip 3ex
 
+The gradient of a scalar function that takes as input, x , which is multi-dimensional and returns a scalar is a vector of partial derivatives of the scalar in each dimension.
 
+\vskip 3ex
+The gradient represents the direction where value of $P(x)$ is higher.
+\vskip 3ex
+If we access the gradient of $P(x)$ we can move from $x$ to a region where $P(x)$'s value higher.
+
+\subsection{Problem with gradient of probabilities}
+
+Probabilities are normalized. They sum to one
+
+\vskip 3ex
+$\textbf{Property of probabilities } \mathcal{Z} = \int \mathcal{P}_{data} x dx = 1$
+\vskip 3ex
+Therefore
+\vskip 3ex
+\scalebox{1.5}{%
+$\mathcal{P}_{data} = \left( \frac{f(x)}{\underbrace{\mathcal{Z}}_{\text{intractable}}}\right )$
+}
+\vskip 3ex
 \end{document}
