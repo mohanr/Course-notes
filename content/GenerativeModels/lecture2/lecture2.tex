@@ -27,19 +27,18 @@ $\Huge \nabla \mathrm{f(x)} = \begin{bmatrix} \frac{{\partial}f}{x_1}} \\
     \frac{{\partial}f}{x_2}} \\ \vdots \\ \frac{{\partial}f}{x_n} \end{bmatrix} $
 
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 % Use the relevant command for your figure-insertion program
 % to insert the figure file.
 % For example, with the option graphics use
-\includegraphics[scale=1]{shapes}
+\includegraphics[width=\textwidth]{shapes}
 %
 % If not, use
 %\picplace{5cm}{2cm} % Give the correct figure height and width in cm
 %
   \caption{Gradient of Probability Distribution function}
 \end{figure}
-
 The space has multiple dimensions with larger values of $P(x)$ in some areas
 and smaller values in others.
 \vskip 3ex
@@ -68,4 +67,43 @@ Therefore
 $\mathcal{P}_{data} = \left( \frac{f(x)}{\underbrace{\mathcal{Z}}_{\text{intractable}}}\right )$
 }
 \vskip 3ex
+It is intractable because we cannot sum across multiple dimensions.Moreover the PDF can encounter numerical stabiliity issues in some regions where the probabiliities are very small.
+
+\vskip 3ex
+\subsection{Gradient of log of probabilities}
+\begin{enumerate}
+\item{${\nabla}_x \log \mathcal{P}_{data} (x) = {\nabla}_x \log f(x) {\nabla}_x \log ( \mathcal(Z) )$}
+\item{Points in the same directiion as gradient of $\mathcal{P} (i.e) \nabla log(P) = \frac{\nabla p}{p}$ which mean we are dividing the vector by the scalar along all dimensions}
+\item{More numerically stable because when $\nabla P$ is very small,
+there are chances that 'p' is also very small.So according to the point
+above if we take the ratio by dividing, it is not as small.}
+\end{enumerate}
+\vskip 3ex
+\section{Score Matching}
+Goal : Estimate the score of $s_{\theta} (x)$
+
+
+\scalebox{1.5}{
+$ \mathcal{L}_{SM}  = \mathrm{E}_x \left[ \lVerts_{\theta} (x) - \underbrace{\nabla (x) \log \mathcal{P}_{data} (x)}_{\text{We don't have access to it}}\rVert_2^2 \right]$
+}
+\vskip 3ex
+\begin{enumerate}
+\item{Implicit Score Matching}
+\item{Sliced Score Matching - A scalable approach to score and density estimation, Song et al, 2019}
+\end{enumerate}
+
+These two approaches are not commonly used now.
+
+\section{Score of a Gaussian Distribution ( example in 1D )}
+
+$\Large \textbf{ For } x \sim \mathcal{N}( \mu, {\sigma}^2 )$
+
+So the probability distribution function is $p(x) = \frac{1}{2 \pi \sigma^2} \text{ exp } - \left( \frac{(x - \mu)^2}{2 \sigma^2})$
+
+Therefore, score is $ s(x) = - \left( \frac{x - \mu}{\sigma^2} \right)$
+
+Now we know that finding the score of a Gaussian distribution is easy. So we take one point and add noise to it and scale it by $\sigma$
+
+$ \tilde{x} = x + \sigma \epsilon, \epsilon = \mathcal{N}( \mu, \mathcal{I} )$
+
 \end{document}
