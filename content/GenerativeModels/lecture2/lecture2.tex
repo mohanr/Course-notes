@@ -94,6 +94,7 @@ $ \mathcal{L}_{SM}  = \mathrm{E}_x \left[ \lVerts_{\theta} (x) - \underbrace{\na
 
 These two approaches are not commonly used now.
 
+\vskip 3ex
 \section{Score of a Gaussian Distribution ( example in 1D )}
 
 $\Large \textbf{ For } x \sim \mathcal{N}( \mu, {\sigma}^2 )$
@@ -102,8 +103,67 @@ So the probability distribution function is $p(x) = \frac{1}{2 \pi \sigma^2} \te
 
 Therefore, score is $ s(x) = - \left( \frac{x - \mu}{\sigma^2} \right)$
 
+\vskip 3ex
 Now we know that finding the score of a Gaussian distribution is easy. So we take one point and add noise to it and scale it by $\sigma$
 
 $ \tilde{x} = x + \sigma \epsilon, \epsilon = \mathcal{N}( \mu, \mathcal{I} )$
+
+\vskip 3ex
+\subsection{Perturbation kernel}
+
+Not much is explained by the instructor. This is a facility to add noise.
+$\Large q_{\sigma}(\tilde{x}) = \int \underbrace{q_{\sigma}(\tilde{x} \mid x) \mathcal{P}_{data}(x) dx}_{\substack {\text{Joint probability}} \\ q(\tilde{x} \mid x)}$
+
+This is an expression that is also considered a Joint probability because if we integrate over $\tilde{x}$ and x, we get 1.
+
+\vskip 3ex
+Noise is added to every data point in the data and more the noise more the perturbations.
+
+\subsection{Estimating the score of the noised distribution}
+
+\scalebox{1.5}{
+$ \mathcal{L}_{SM}(q_{\sigma})  = \mathrm{E}_{\tilde{x}} \left[ \lVerts_{\theta} (\tilde{x}) - \nabla (\tilde{x}) \log q_{\sigma} \tilde{x} \rVert_2^2 \right]$
+}
+\vskip 3ex
+The instructor mentions a research paper that proves that the loss above is equivalnet to the following loss equation.
+\vskip 3ex
+\scalebox{1.5}{
+$ \mathcal{L}_{DSM}(q_{\sigma})  = \mathrm{E}_{x,\tilde{x}} \left[ \lVert\overbrace{s_{\theta} (\tilde{x})}^\text{True score} - \underbrace{\nabla (\tilde{x}) \log q_{\sigma} (\tilde{x} \mid x)}_{\Large \substack{-{\frac{ {\tilde{x}}- x}{\sigma^2}} \\ \text{Tractable}}} \rVert_2^2 \right]$
+}
+\vskip 3ex
+\section{Denoising Score Matching}
+
+\scalebox{1.5}{
+$ \mathcal{L}_{DSM}(q_{\sigma})  = \mathrm{E}_{x,\tilde{x}} \left[ \lVert\overbrace{s_{\theta} (\tilde{x})}^\text{True score} - \underbrace{\nabla (\tilde{x}) \log q_{\sigma} (\tilde{x} \mid x)}_{\Large \substack{-{\frac{ {\tilde{x}}- x}{\sigma^2}} \\ \text{Tractable}}} \rVert_2^2 \right]$
+}
+\vskip 3ex
+However, $  \Large \mathcal{L}_{DSM} = \mathcal{L}_{SM}\underbrace{(q_{\sigma})}_\substack{\Large \text{This is not   } \\ \mathcal{P}_{data}}$
+\vskip 3ex
+\section{Limitations of vanilla Denoising Score Matching}
+
+It appears that if $q_\sigma \text{ with } \sigma \ll 1$ then $q_\sigma$ is close to $\mathcal{P}_{data}$ but estimations are poor in regions where $\tilde{x}$ is not likely to appear. $\textbf{ What does this mean ?a}$
+
+\begin{tcolorbox}[fontupper=\Large,sharp corners, colback=teal!20, colframe=Aquamarine!10!blue]
+This may be the subject of one of Lilian Wong's blog posts.
+\end{tcolorbox}
+
+\section{Score Matching with varying noise via NCSN - Noise Conditional Sampling Network}
+\begin{tcolorbox}[fontupper=\Large,sharp corners, colback=teal!20, colframe=Aquamarine!10!blue]
+Score Modelling by estimating gradients of the Data Distribution, Song et all, 2019
+\end{tcolorbox}
+
+
+\begin{figure}[H]
+\centering
+% Use the relevant command for your figure-insertion program
+% to insert the figure file.
+% For example, with the option graphics use
+\includegraphics[width=\textwidth]{noise}
+%
+% If not, use
+%\picplace{5cm}{2cm} % Give the correct figure height and width in cm
+%
+  \caption{}
+\end{figure}
 
 \end{document}
