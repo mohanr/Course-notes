@@ -10,7 +10,7 @@
 \section{Recap}
 
 \scalebox{1.5}{%
-\begin{equation}
+\begin{equation*}
   \begin{array}{l}
  \mathcal{L}_{DDPM} (\theta) = \\ \mathrm{E}_{t \sim Unif,x_0 \sim q_0(x_0), \epsilon \sim \mathcal{N}(0,{I}_d)} \\ \left[ \lVert\overbrace{{\epsilon}^{\theta}}^{\parbox{2cm}{Noise predictor}} \underbrace{(\sqrt{{\bar{\alpha}_t}} x_0  + \sqrt{1 - {\bar{\alpha}_t}} \epsilon}_\text{Noised image}, \overbrace{t}^{\parbox{1cm}{Noise level}} - \overbrace{\epsilon}^{\parbox{1cm}{Actual level}} )\rVert_2^2 \right]
  \end{array}
@@ -152,8 +152,7 @@ This may be the subject of one of Lilian Wong's blog posts.
 Score Modelling by estimating gradients of the Data Distribution, Song et all, 2019
 \end{tcolorbox}
 
-
-\begin{figure}[H]
+\begin{figure}[h]
 \centering
 % Use the relevant command for your figure-insertion program
 % to insert the figure file.
@@ -165,5 +164,45 @@ Score Modelling by estimating gradients of the Data Distribution, Song et all, 2
 %
   \caption{}
 \end{figure}
+
+We sample from a distribution is is easy to sample from like the Gaussian. After that we predict the score from distributions that progressively less noisy until we reach very close to $\mathcal{P}_{data}$ which is a noisy data distribution which very low $\sigma$
+
+This is $\textbf{ Annealed Langevin Dynamics }$
+\section{ This is $\textbf{ Annealed Langevin Dynamics }$}
+
+\begin{enumerate}
+\item{ Sample : $x_{\mathcal{T} } \sim \mathcal{N} (0,{\sigma}^2_{\mathcal{T}}))$
+\item{ For each $\sigma_{\mathcal{T} } \text{ perform iterative update for K steps }$ }
+\item{Obtain final image $x_0$}
+\end{enumerate}
+\scalebox{1.5}{
+  $x \leftarrow x + \frac{\alpha^i} {2} \underbrace{s^{\theta}}_\substack{\text{Predicted Score } \\ \text{ to move towards}} ( x, \alpha^i ) + \sqrt {\alpha^i} \underbrace{\epsilon}_\substack{\text{Sampled from a} \\ \text{Normal Distribution}}$
+}
+\vskip 3ex
+\section{ Parallel between noise ( DDPM ) and score (NCSN)}
+
+\scalebox{2.5}{
+
+\begin{equation*}
+ \begin{array}{l}
+\textbf{ DDPM } = \\ \underbrace{\sqrt {\overline{\alpha_t}} x_0 + \sqrt { 1- \overline{\alpha_t}} \epsilon}_\underbrace{{q(x_t \mid x_0) = \sqrt {\overline{\alpha_t}} x_0, \sqrt{ 1 - \alpha_t } \mathrm{I}}}_{\nable_{x_t}\log q(x_t \mid x_0) = - \frac{ \epsilon}{\sqrt { 1- \overline{\alpha_t}}}}
+\end{array}
+\end{equation}
+}
+\vskip 3ex
+The last formula shown above links the score predicted to move from noisy to a clean image and the noise level added. They are equal.
+
+\vskip 3ex
+\section{ Wiener Process}
+
+$\textbf{Idea }$: Continuous equivalent of adding increments of Gaussian noise
+
+$\textbf{ Wiener Process }$ : Stochastic process with the following properties.
+
+\begin{enumerate}
+\item{$ W_0 = 0$ }
+\item{$ W_T - W_s \sim \mathcal{N}(0, ( t-s ) \mathrm{I})$}
+\item{ Only Increments are independent }
+\end{enumerate}
 
 \end{document}
