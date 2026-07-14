@@ -227,4 +227,66 @@ When $dt$ tends to 0 we have taylor expansion which is $\frac{1}{2}$ of thet qua
   $dw = \sqrt {dt} \epsilon \text{ according to Wiener process }$
 \end{tcolorbox}
  $\overbrace{dx}^\text{Differential evolution} \sim  \left[ 1 -    \frac{1}{2}\beta(t) dt -1\right]  x+ \sqrt{\beta(t) } dw $
+\vskip 3ex
+\scalebox{1.5}{
+$dx = - \frac{1}{2}\beta(x) dt+ \sqrt{\beta(t) } dw$
+}
+In other words the noising forward process brings x closer to 0 but also adds noise so that the variance converges to 1.
+DDPM is exactly the same process. We take a clean image and add noise in increments and after time steps 't', it converges to a normal distribution with mean 0 and variance 1.
+
+\begin{table}[h]
+\caption{SDE Variants}
+%
+% For LaTeX tables use
+%
+%
+%
+\begin{tabular}{p{3.5cm}}
+\hline\noalign{\smallskip}
+\textbf{Variance Preserving} \\
+\noalign{\smallskip}\hline\noalign{\smallskip}
+
+\textbf{Example DDPM}
+
+
+\noalign{\smallskip}\hline\noalign{\smallskip}
+
+
+$\mathrm{f(x,t)} = - \frac{1}{2} \beta(t) x \textbf{ Drift }$ \\
+$\mathrm{g(t)} = \sqrt{  \beta(t) } \textbf{ Diffusion }$
+
+\noalign{\smallskip}\hline\noalign{\smallskip}
+\end{tabular}
+\end{table}
+
+\section{Training Derivation}
+
+$\textbf{Objective : } \text{ Estimating the score } s_{\theta}( x, t )$
+
+\scalebox{1.5}{
+$\mathcal{L}_{DSM}  = \mathrm{E}_{t,x_0,x_t} \left[ \Lambda_t \lVerts_{\theta} (x_t,t) - \nabla (x_t) \log p (x_t \mid x_0) \rVert_2^2 \right]$
+}
+
+\subsection{Introducing the reverse formula}
+
+$dt = \underbrace{\mathcal{f(x,t)} dt}_\text{Drift} + \underbrace{g(t) dW)}_\text{Stochastic Diffusion}$
+
+\vskip 3ex
+\subsection{Intuition behind the reverse formula}
+\vskip 3ex
+$\textbf{ Reverse : } \text{ Transform noise back into data }$
+The paper is 'Reverse time diffusion equation models', Anderson, 1982
+The VIP cheatsheets, CS 230, Deep Learnings, Amidi, 2019
+
+\vskip 3ex
+The following is the result based on SDE research and this is the reason for moving from discrete to the continuous world.
+
+\vskip 3ex
+\scalebox{1.5}{
+$dx = \left[ \mathcal( f( x, t ) - \underbrace{gt^2 \nabla \log ({\mathcal{P}}_t (x))}_\text{Compensation for drift} ) \right ] dt + g(t) d\overline{W}$
+}
+\vskip 3ex
+The SDE research uses the score in the formula to reverse. This means that the original diffusion( Brownian motion ? ) added during the forward process is offset when we reverse.
+
+\vskip 3ex
 \end{document}
