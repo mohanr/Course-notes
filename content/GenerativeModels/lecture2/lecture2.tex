@@ -202,7 +202,29 @@ $\textbf{ Wiener Process }$ : Stochastic process with the following properties.
 \begin{enumerate}
 \item{$ W_0 = 0$ }
 \item{$ W_T - W_s \sim \mathcal{N}(0, ( t-s ) \mathrm{I})$}
-\item{ Only Increments are independent }
+\item{ Only Increments are independent. Not the value of $W_t$ }
 \end{enumerate}
 
+Now we can derive the continuous formulation of DDPM and NCSN. Here we
+show only the derivation of DDPM.
+
+\scalebox{1.5}{
+$x_t = \sqrt { 1 - \underbrace{\beta_T}_\text{Noise schedule} } x_{t-1} + \beta_t \epsilon$
+}
+\scalebox{1.5}{
+$\underbrace{x_t = x_{t-1}}_\substack{\text{Differential evolution if x}  \\ \text{ as a function of } \\ \text{everything else}}$
+}
+
+$x_t - x_{t-1}$ is very small. So it is considered continuous.
+$x_t - x_{t-1} = \left[\sqrt { 1 - \beta_t} - 1\right]  x_{t-1}+ \sqrt{\beta_t} \epsilon $ Why is 1 subtracted ?
+
+$\beta_t = \beta(t) dt \text{ is rate at time t }$
+ $x_t - x_{t-1} = \left[\sqrt { \cancel{1} - \beta(t) dt} - \cancel{1}\right]  x_{t-1}+ \sqrt{\beta(t) dt} \epsilon $ Why is 1 subtracted ?
+
+When $dt$ tends to 0 we have taylor expansion which is $\frac{1}{2}$ of thet quantity.
+
+\begin{tcolorbox}[fontupper=\Large,sharp corners, colback=teal!20, colframe=Aquamarine!10!blue]
+  $dw = \sqrt {dt} \epsilon \text{ according to Wiener process }$
+\end{tcolorbox}
+ $\overbrace{dx}^\text{Differential evolution} \sim  \left[ 1 -    \frac{1}{2}\beta(t) dt -1\right]  x+ \sqrt{\beta(t) } dw $
 \end{document}
