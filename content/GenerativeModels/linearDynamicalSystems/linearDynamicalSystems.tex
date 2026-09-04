@@ -1,0 +1,341 @@
+
+\documentclass[../../../include/open-logic-chapter]{subfiles}
+
+\begin{document}
+
+\olchapter{linearDynamicalSystems}{linearDynamicalSystems}{Linear Dynamical Systems}
+
+\olsection{Canonical Model for Time series Data}
+
+
+\scalebox{1.5}{%
+$ x_{t+1} =\underbrace{A}_\text{Transition Matrix}x_t +
+  \underbrace{B}_\text{Control Matrix} u_t + \underbrace{ w_t }_\text{Process noise} $}
+
+
+\vskip 3ex
+\scalebox{1.5}{%
+$ y_t =\underbrace{C}_\text{Sensing Matrix}x_t + \underbrace{B}_\text{Feedthrough Matrix} u_t + \underbrace{z_t}_\text{Observation noise}$
+}
+
+
+\vskip 3ex
+We can think of this noise a added Gaussian noise. While linear dynamical systems have many applications they are particularly suitable for Robotics, Navigations and learning.
+
+\vskip 3ex
+
+Example from rocket trajectory
+
+\vskip 3ex
+$
+  \begin{array}{l}
+ \mathrm{x_t} = \begin{bmatrix} \textbf{Positions} \\
+    \textbf{Velocity}  \\ \textbf{Acceleration}  \end{bmatrix}
+
+\mathrm{x_t} = \begin{bmatrix} \textbf{Laws of motion}
+\end{bmatrix}
+ \end{array}
+$
+\vskip 3ex
+
+Example from epidemology
+\vskip 3ex
+$
+  \begin{array}{l}
+ \mathrm{x_t} = \begin{bmatrix} \textbf{Susceptible} \\
+    \textbf{Exposed}  \\ \textbf{Infected}  \\ \textbf{Recovered}  \end{bmatrix}
+
+\mathrm{x_t} = \begin{bmatrix} \textbf{State machine}
+\end{bmatrix}
+ \end{array}
+$
+
+\vskip 3ex
+Other applications are Randomized Control Trials, Speech Processing, Econometrics and Finance. In the case of Randomized control trials, it can also
+solve the $n = 1$ problem as it pertains to pain medications that a particular patient needs.
+
+\vskip 3ex
+
+\scalebox{1.5}{%
+$  \underbrace{x_{t+1}}_\text{Hidden State} = Ax_t +
+  B \underbrace{u_t}_\text{Control} +  w_t $}
+
+
+\vskip 3ex
+\scalebox{1.5}{%
+$ \underbrace{y_t}_\text{Observation} = Cx_t + B u_t + z_t$
+}
+
+\vskip 3ex
+\noindent
+{\Large\color{green}\textbf{+}} \textbf{When the parameters are known, prediction and inference are easy (like Kalman Filtering).}
+\vskip 3ex
+\noindent
+{\Large\color{red}\textbf{?}} \textbf{How do you learn its parameters?}
+
+\section{Main problem (informal)}
+
+Given one long trajectory
+
+\vskip 3ex
+\scalebox{1.5}{%
+        $\text{Input/Controls} : u_1, u_2, \dots , u_T$
+        $Outputs : y_1, y_2, \dots , y_T$
+}
+\vskip 3ex
+\noindent
+\parbox{0.95\linewidth}{
+\textbf{Definition:} We consider two Linear Dynamical Systems to be
+equivalent if for any sequence of adaptively chosen inputs
+$u_{t+1} = \mathrm{f}(y_1, y_2, \dots, y_T, u_1, u_2, \dots, u_T)$,
+\textbf{they generate the same distribution on the output up to a transformation of the noise.}
+}
+\vskip 3ex
+So even an adaptive adversary cannot differentiate one LDS from the other in this case because the two LDS's differ only in the hidden state which is not exposed.
+\vskip 3ex
+
+\noindent
+\parbox{0.95\linewidth}{
+\textbf{Proposition:} Two Linear Dynamical Systems with Gaussian noise are equivalent $\iff \exists\, \mathrm{U}$ such that
+}
+\vskip 3ex
+
+\scalebox{1.5}{%
+  $\mathrm{A} = \mathrm{U}^{-1} \hat{A}\mathrm{U}, \mathrm{B} = \mathrm{U}^{-1} \hat{B}, \ \mathrm{C} = \hat{C} \mathrm{U}, \ \mathrm{D} = \hat{D}$
+}
+
+This defines a natural parameter distance.
+
+\vskip 3ex
+
+\section{Main problem (informal)}
+
+Given one long trajectory
+
+\vskip 3ex
+\scalebox{1.5}{%
+        $\text{Input/Controls} : u_1, u_2, \dots , u_T$
+        $Outputs : y_1, y_2, \dots , y_T$
+}
+Can we find $\hat{A},\hat{B},\hat{C},\hat{D}$ such that
+
+\vskip 3ex
+\scalebox{1.5}{%
+$\lVert \mathrm{A} - \mathrm{U}^{-1}\mathrm{\hat{A}}\mathrm{U} \rVert_F,
+\lVert \mathrm{B} - \mathrm{U}^{-1}\mathrm{\hat{A}}\rVert_F,
+\lVert \mathrm{C} - \mathrm{\hat{C}}\mathrm{U}-\rVert_F,
+\lVert \mathrm{D} - \mathrm{\hat{D}}\rVert_F$
+}
+\vskip 3ex
+$ \textbf{Is there a polynomial time learning algorithm for learning ? }$
+\vskip 3ex
+The most important matrix in a Linear Dynamical System is the  Transition matrix. This matrix describes how the system evolves.
+
+\vskip 3ex
+Widespread assumption on $ \textbf{ Spectral Radius }$ often unreasonable
+\section{Prior work}
+\begin{tabular}{p{3.5cm}p{2.8cm}}
+\hline\noalign{\smallskip}
+\textbf{Strict stability} $p(A) < 1$ & \textbf{Marginal stability} $p(A) \le 1$ \\
+\textbf{fails even in simple cases }& \textbf{Otherwise system would explode} \\
+\textbf{No long-range correlations }& \\
+\noalign{\smallskip}\hline\noalign{\smallskip}
+\end{tabular}
+
+The explanation from Ankur Moitra, who is the instructor, is that discretization of ODE's create a upper-triangular matrix with ones in the diagonal. The eigen values are equal to 1.
+
+\vskip 3ex
+Bounds depend on $\frac{1}{(1 - \mathrm{P}(A))}$ degrades as $\mathrm{P}(A) \rightarrow 1$
+
+
+$ \textbf{Do long-range correlations actually restrict learning ? }$
+
+\vskip 3ex
+\section{observability and controllability}
+
+The observability matrix of order \texttt{s} is \\
+
+\scalebox{1.5}{%
+ $ \mathbb{O}_s = \begin{bmatrix} \mathbb{C} \\
+         \mathbb{CA} \\
+         \vdots \\
+         \mathbb{CA}^{s-1} \\
+  \end{bmatrix} $
+}
+\vskip 3ex
+\textbf{Proposition :} If it doesn't have full column rank, there is some portion of the state space we miss even over \texttt{s} steps.
+
+\vskip 3ex
+We don't learn properly.
+
+\vskip 3ex
+\textbf{Proof :} If we move the state $x_t$ in some direction \texttt{z} then
+
+\vskip 3ex
+\scalebox{1.5}{%
+  $\mathrm{CA}_{x_t} = \underbrace{\mathrm{CA}_{(x_t + z)}}_\text{in the kernel of C} \Rightarrow  \textbf{ no effect on  } y_{t + 1} etc. $
+
+}
+\vskip 3ex
+If you have a vector in the kerner of the observability matrix, it describes the direction that the state could move in but you can never see any of these changes in any of the \texttt{s} steps.
+\vskip 3ex
+\textbf{Definition :} The controllability matrix of order \texttt{s} is
+\vskip 3ex
+
+\scalebox{1.5}{%
+$ \mathrm{Q}_{s} = \left[ \mathrm{B},  \mathrm{AB}, \dots, \mathrm{A}^{s-1}\mathrm{B}\right]$
+}
+
+\vskip 3ex
+\noindent
+\parbox{0.95\linewidth}{
+$\mathrm{B}$ \textbf{ is the matrix that describes the relationship between the control I inject and how it affects the hidden state.}
+}
+\vskip 3ex
+\noindent
+\parbox{0.95\linewidth}{
+$\mathrm{A}$ \textbf { is the transition matrix }
+}
+\vskip 3ex
+\textbf{Proposition :} If it doesn't have full row rank, there is some portion of the state space that cannot be reached by appropriate inputs.
+
+
+\begin{tcolorbox}[fontupper=\Large,sharp corners, colback=teal!20, colframe=Aquamarine!10!blue]
+Necessity of these assumptions goes back to Kalman in 1960
+\end{tcolorbox}
+
+\textbf{Recent results :}
+\textbf{Theorem : Bakshi Liu, Moitra, Yau} There is a polynomially stable algorithm for learning any marginally stable Linear Dynamical System from one long trajectory from \textbf{ quantitative observability and controllabilty }$^{*}$
+
+\vskip 3ex
+${}^{*}$(i.e) Conditioning number of bounds
+
+\vskip 3ex
+Moreover these conditions are essentially minimal
+\vskip 3ex
+ \textbf{Theorem : Bakshi Liu, Moitra, Yau} If the controllability and observability matrices are ill-conditioned  you can prove a lower bound on the sample complexity as long as they are ill-conditioned on every \texttt{s}.
+
+\vskip 3ex
+
+\begin{tcolorbox}[fontupper=\Large,sharp corners, colback=teal!20, colframe=Aquamarine!10!blue]
+  It is information theoretically possible.
+\end{tcolorbox}
+
+\textbf{Comments : (Simchowitz, Boczar, Recht)} also gave algorithms under marginal stability, \textbf{ but unspecified dependence on system properties }$^{*}$
+
+\begin{tcolorbox}[fontupper=\Large,sharp corners, colback=teal!20, colframe=Aquamarine!10!blue]
+  Also renewed interest due to their relation to Recurrent Neural Networks. Analyzing how well gradient descent work on RNNs is going to be very, very tough. So they studied Linear Dynamical Systems.
+
+Before using LDSs as a prototype for reasoning about RNN, we need to understand their fundamental limits. (e.g) What are minimal assumptions about learnability ?
+\end{tcolorbox}
+
+\textbf{Introduced by Karl Pearson in 1894} .
+\vskip 3ex
+\begin{tabular}{l}
+\hline
+Estimate moments of distribution from the sample \\
+Setup system of equations in unknown parameters \\
+Solve to compute estimates\\
+\end{tabular}
+
+\vskip 3ex
+
+\begin{tcolorbox}[fontupper=\Large,sharp corners, colback=teal!20, colframe=Aquamarine!10!blue]
+  Is there a recipe for non-stationary data ?
+\end{tcolorbox}
+
+\vskip 3ex
+\section{Blueprint}
+\textbf{Definition} The markov parameters upto order \texttt{2s + 1} are
+
+\vskip 3ex
+$ \mathbb{G} = \mathbb{D}, \mathbb{CB}, \mathbb{CAB}, \dots, \mathbb{CA}^{2s}\mathbb{B}$
+
+
+\vskip 3ex
+\begin{tabular}{l}
+Estimate the Markov parameters from the sample \\
+Setup system of equations in unknown parameters \\
+Solve for the parameters using \textbf{Ho-Kalman Algorithm}\\
+\end{tabular}
+
+\vskip 3ex
+\subsection{The HO-Kalman Algorithm}
+
+\textbf{Step 1 - Form the Hankel Matrix}
+
+\begin{equation}
+\hbox{
+\begin{tikzpicture}[
+    node distance=1mm and 0mm,
+    baseline]
+\matrix (M1) [matrix of math nodes, nodes={inner xsep=9pt, inner ysep=7pt}  ,{left delimiter=[},{right delimiter=]}]
+{
+C & CAB  & \cdots & CA^{s}B \\
+CAB & CA^{2} & \cdots & B  \\
+\vdots & \vdots & \ddots & \vdots \\
+CA^{s}B  & \cdots & \cdots & CA^{2s}B \\
+};
+\draw[green!50!black,very thick]
+    (M1-1-1.north west) rectangle (M1-4-3.south east);
+\draw[red!50!black,very thick]
+    (M1-1-2.north west) rectangle (M1-4-4.south east);
+\node[anchor=south east,inner sep=1pt] at (M1-1-1.north west)
+    {H1};
+\node[anchor=north west,inner sep=1pt] at (M1-4-4.south east)
+    {H2};
+\end{tikzpicture}
+}
+\end{equation}
+
+\vskip 3ex
+Take the Markov parameters and organize them into a giant Hankel matrix.
+
+\vskip 3ex
+\textbf{Claim :} $ \mathrm{H} = \mathrm{O}_{s+1} \mathrm{Q}_{S+1}$
+\vskip 3ex
+\texttt{H} represents the markov parameters and we stack them in a block Hankel matrix.
+\vskip 3ex
+
+\scalebox{1.5}{%
+$ \mathrm{O} = \begin{bmatrix} \mathrm{C} \\
+    \mathrm{CA}  \\ \mathrm{CA}^2 \\ \vdots \end{bmatrix}
+$
+}
+\scalebox{1.5}{%
+$ \mathrm{Q} = \begin{bmatrix} \mathrm{B} \\
+    \mathrm{AB}  \\ \mathrm{A}^2\mathrm{B} \\ \vdots \end{bmatrix}
+$
+}
+
+
+\textbf{Step 2 - Singular Value Decomposition}
+
+\begin{tcolorbox}[fontupper=\Large,sharp corners, colback=teal!20, colframe=Aquamarine!10!blue]
+  Can we compute another factorization and show equivalence ?
+\end{tcolorbox}
+\scalebox{1.5}{%
+$\underbrace{\mathrm{H}_1}_{\parbox{2cm}{Hankel matrix with last column removed}} = \mathrm{U} \Sigma \mathrm{V}^T = {\underbrace{(\mathrm{U}{\Sigma}^{\frac{1}{2}})}_{\hat{O}}}\underbrace{({\Sigma}^{\frac{1}{2}}\mathrm{V}^T)}_{\hat{Q}}$
+}
+
+\vskip 3ex
+I can write its SVD.
+\vskip 3ex
+
+\scalebox{1.5}{%
+$ = \mathrm{O}_{s+1}\mathrm{Q}_s$
+}
+\vskip 3ex
+This is possible by removing the last column of the Hankel matrix. How ?
+
+\vskip 3ex
+The following seems to be a Linear Algebra result.
+
+\textbf{Lemma :} If $ = \mathrm{O}_{s+1} \textbf{ and }\mathrm{Q}_s$ have full column and row rank respectively then
+
+$ \mathrm{O}_{s+1} = \mathrm{\hat{O}}\mathrm{T}, \mathrm{Q}_s = \mathrm{T}^{-1}\mathrm{\hat{Q}} $ for some matrix transformation.
+
+
+
+
+\end{document}

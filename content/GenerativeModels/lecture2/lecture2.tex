@@ -84,7 +84,7 @@ Goal : Estimate the score of $s_{\theta} (x)$
 
 
 \scalebox{1.5}{
-$ \mathcal{L}_{SM}  = \mathrm{E}_x \left[ \lVerts_{\theta} (x) - \underbrace{\nabla (x) \log \mathcal{P}_{data} (x)}_{\text{We don't have access to it}}\rVert_2^2 \right]$
+$ \mathcal{L}_{SM}  = \mathrm{E}_x \left[ \lVert_{\theta} (x) - \underbrace{\nabla (x) \log \mathcal{P}_{data} (x)}_{\text{We don't have access to it}}\rVert_2^2 \right]$
 }
 \vskip 3ex
 \begin{enumerate}
@@ -122,7 +122,7 @@ Noise is added to every data point in the data and more the noise more the pertu
 \subsection{Estimating the score of the noised distribution}
 
 \scalebox{1.5}{
-$ \mathcal{L}_{SM}(q_{\sigma})  = \mathrm{E}_{\tilde{x}} \left[ \lVerts_{\theta} (\tilde{x}) - \nabla (\tilde{x}) \log q_{\sigma} \tilde{x} \rVert_2^2 \right]$
+$ \mathcal{L}_{SM}(q_{\sigma})  = \mathrm{E}_{\tilde{x}} \left[ \lVert_{\theta} (\tilde{x}) - \nabla (\tilde{x}) \log q_{\sigma} \tilde{x} \rVert_2^2 \right]$
 }
 \vskip 3ex
 The instructor mentions a research paper that proves that the loss above is equivalnet to the following loss equation.
@@ -264,7 +264,7 @@ $\mathrm{g(t)} = \sqrt{  \beta(t) } \textbf{ Diffusion }$
 $\textbf{Objective : } \text{ Estimating the score } s_{\theta}( x, t )$
 
 \scalebox{1.5}{
-$\mathcal{L}_{DSM}  = \mathrm{E}_{t,x_0,x_t} \left[ \Lambda_t \lVerts_{\theta} (x_t,t) - \nabla (x_t) \log p (x_t \mid x_0) \rVert_2^2 \right]$
+$\mathcal{L}_{DSM}  = \mathrm{E}_{t,x_0,x_t} \left[ \Lambda_t \lVert_{\theta} (x_t,t) - \nabla (x_t) \log p (x_t \mid x_0) \rVert_2^2 \right]$
 }
 
 \subsection{Introducing the reverse formula}
