@@ -4,7 +4,7 @@
 \begin{document}
 
 \olchapter{linearDynamicalSystems}{linearDynamicalSystems}{Linear Dynamical Systems}
-
+%% https://nptel.ac.in/courses/10810614
 \olsection{Canonical Model for Time series Data}
 
 
@@ -262,7 +262,7 @@ Solve for the parameters using \textbf{Ho-Kalman Algorithm}\\
 \vskip 3ex
 \subsection{The HO-Kalman Algorithm}
 
-\textbf{Step 1 - Form the Hankel Matrix}
+\textbf{Step 1 - From the Hankel Matrix}
 
 \begin{equation}
 \hbox{
@@ -333,7 +333,355 @@ The following seems to be a Linear Algebra result.
 
 \textbf{Lemma :} If $ = \mathrm{O}_{s+1} \textbf{ and }\mathrm{Q}_s$ have full column and row rank respectively then
 
-$ \mathrm{O}_{s+1} = \mathrm{\hat{O}}\mathrm{T}, \mathrm{Q}_s = \mathrm{T}^{-1}\mathrm{\hat{Q}} $ for some matrix transformation.
+$ \mathrm{O}_{s+1} = \mathrm{\hat{O}}\mathrm{T}, \mathrm{Q}_s = \mathrm{T}^{-1}\mathrm{\hat{Q}} $ for some matrix transformation. How do we estimate \texttt{A} ?
+
+
+\vskip 3ex
+\textbf{Step 2 - Using what we know already}
+
+
+\scalebox{1.5}{%
+$\underbrace{\mathrm{H}_2}_{\parbox{2cm}{Hankel matrix with 1st column removed}} =  \mathrm{O}_{s+1}\mathrm{A}\mathrm{Q}_s$
+}
+
+\vskip 3ex
+
+\scalebox{1.5}{%
+$\mathrm{\hat{O}}\mathrm{T}\mathrm{A}  \mathrm{T}^{-1}\mathrm{\hat{Q}}$ from Step 2
+}
+\vskip 3ex
+\scalebox{1.5}{%
+So we set $\mathrm{\hat{A}} = \mathrm{\hat{O}}^{+}\mathrm{H}_2\mathrm{\hat{Q}}^{+} \implies \mathrm{T}\mathrm{A}  \mathrm{T}^{-1}$
+}
+\section{Blueprint( repeated from above )}
+\textbf{Definition} The markov parameters upto order \texttt{2s + 1} are
+
+\vskip 3ex
+$ \mathbb{G} = \mathbb{D}, \mathbb{CB}, \mathbb{CAB}, \dots, \mathbb{CA}^{2s}\mathbb{B}$
+
+
+\vskip 3ex
+\begin{tabular}{l}
+Estimate the Markov parameters from the sample \\
+Setup system of equations in unknown parameters \\
+Solve for the parameters using \textbf{Ho-Kalman Algorithm}\\
+\end{tabular}
+
+How do we estimate the Markov parameters ?
+
+\vskip 3ex
+
+\subsection {Naive approach}
+
+\textbf{ Observation : } If the control and noises are independent and have an identity covariance, then
+\vskip 3ex
+
+\scalebox{1.5}{%
+$\mathbb{E}\left(\mathrm{y}_{t+j}\,\mathrm{u}^T\right) =
+\begin{cases}
+\mathrm{D} & \text{if } j = 0 \\
+\mathrm{CA}^{j-1}\mathrm{B} & \text{else}
+\end{cases}$
+}
+\vskip 3ex
+\begin{tcolorbox}[fontupper=\Large,sharp corners, colback=teal!20, colframe=Aquamarine!10!blue]
+ The above is the unbiased estimator for the Markov parameters
+\end{tcolorbox}
+\vskip 3ex
+The Markov parameters in the block matrix describe the covariance of the inputs and outputs inside the expectation.
+
+\vskip 3ex
+\textbf{Proof : Expand the recurrence (e.g) j = 1}
+
+The following is the same formula from the first page.
+\vskip 3ex
+\scalebox{1.5}{%
+   $ \underbrace{y_{t + 1}}_{\parbox{2cm}{Outputs at time t+1}} =
+  \underbrace{\mathrm{C}x_{t + 1}}_{\parbox{2cm}{Hidden state at time t+1}} + \underbrace{\mathrm{D}u_{t + 1}}_{\parbox{2cm}{Inputs at time t+1}} + z_{t + }$
+}
+\vskip 3ex
+If you look at the covariance between $y_{t + 1}$ and $u_t$, I don't see any $u_t$ on the left side. So I can expand  like this because
+ $\mathrm{C}x_{t + 1}$ is related to the state and input at time \texttt{t}
+\vskip 3ex
+
+\scalebox{1.5}{%
+ $\mathrm{CA}_{x_t} + \mathrm{CB}_{u_t} + \mathrm{C}_{w_t} + \mathrm{D}_{u_{t+1}} + z_{t+1} $
+}
+\vskip 3ex
+\scalebox{1.5}{%
+$\implies \mathbb{E}\left(\mathrm{y}_{t+j}\,\mathrm{u}^T\right) = \mathrm{C}\mathrm{B}\mathrm{E} (u_t {u_t}^T) = \mathrm{C} \mathrm{B} $
+}
+
+\vskip 3ex
+\section{Major complication}
+We could try to implement $\mathrm{CA}^{j-1}\mathrm{B} \textbf{ using } \frac{1}{T} \sum_{t = 1}^T \left(\mathrm{y}_{t+j}\,\mathrm{u}^T\right)$
+
+\vskip 3ex
+This introduces dependence across timesteps and the estimator can have unbounded variance.
+
+\vskip 3ex
+\textbf{Aside :} This is why strict stability trivializes the problem. Otherwise just wait long enough to get almost independent samples. This means instead of adding at every timestep we add at timesteps that are farther away from each other.
+
+\vskip 3ex
+\textbf{Stabilizing the moments} Form a new time series
+
+ $\mathrm{\hat{y}}_t \delangle \mathrm{y}_t = \sum_{j = 1}^n \mathrm{C}_j \mathrm{y}_{j - 1} such that $
+
+\vskip 3ex
+\begin{enumerate}
+\item{ Expectation is unchanged
+  $\mathbb{E}\left(\mathrm{\hat{y}}_{t+j}\,\mathrm{u}^T\right) =\mathbb{E}\left(\mathrm{y}_{t+j}\,\mathrm{u}^T\right)$ }
+\item{ It's variance is bounded \textbf{ independently of t } }
+\end{enumerate}
+
+\vskip 3ex
+This enables us to have unbiased estimators by engineering a new form of time series.
+
+\vskip 3ex
+\textbf{First attempt :} Take the $\mathrm{cj}s =$ the co-efficients of the characteristic polynomial of my transition matrix $\mathrm{A}$. I don't know that but I pretend that someone told me the transition matrix.
+
+\vskip 3ex
+\textbf{Cayley-Hamilton theorem} states that if you take the characteristic polynomial and plugin the actual matrix we get out a all-zero matrix.Another way to state that is that the co-efficients of the characteric polynomial of $\mathrm{A}$ enables us to write a high-power of $\mathrm{A}$ in linear combinations of low-order powers of $\mathrm{A}$
+\vskip 3ex
+\scalebox{1.5}{%
+ $\mathrm{A}^{n} = \sum_{j = 1}^n \mathrm{C}_{j}  \mathrm{A}^{n-j} = 0  $
+}
+\vskip 3ex
+This will enable us to cancel out all but a small number of transient terms.
+\vskip 3ex
+For simplicity suppose
+\scalebox{1.5}{%
+$\mathrm{x}_{t+1} = \mathrm{Ax}_t + \mathrm{Bu}_t \textbf{ and } \mathrm{y}_t = \mathrm{Cx}_t $}. Then we have
+\scalebox{1.5}{%
+$\mathrm{\hat{y}}_{t+1} = \mathrm{y}_{t+1} - \mathrm{c}_1\mathrm{y}_t - \mathrm{c}_2\mathrm{y}_t$} which is obtained by eliding other co-efficients for the sake of simplicity.
+\scalebox{1.5}{%
+$\mathrm{\hat{y}}_{t+1} = \mathrm{Cx}_{t+1} - \mathrm{c}_1\mathrm{Cx}_t - \mathrm{c}_2\mathrm{Cx}_{t-1}$} from the equation shown above.
+
+\vskip 3ex
+\scalebox{1.5}{%
+$\mathrm{\hat{y}}_{t+1} =$
+}
+\begin{tikzpicture}[every node/.style={font=\Large, text width=2.2cm, align=center}]
+\draw[xstep=2cm,ultra thick, ystep=1cm, color=gray] (-4,-2) grid (4,2);
+
+\node at (-3,+1.5) {$\mathrm{Cx}_{t+1}$};
+\node at (-1,+1.5) {};
+\node at (+1,+1.5) {};
+\node at (+3,+1.5) {};
+
+\node at (-3,+0.5) {};
+\node at (-1,+0.5) {$-\mathrm{c}_1\mathrm{Cx}_t$};
+\node at (+1,+0.5) {};
+\node at (+3,+0.5) {};
+
+\node at (-3,-0.5) {};
+\node at (-1,-0.5) {};
+\node at (+1,-0.5) {$\mathrm{c}_2\mathrm{Cx}_{t-1}$};
+\node at (+3,-0.5) {};
+
+\node at (-3,-1.5) {};
+\node at (-1,-1.5) {};
+\node at (+1,-1.5) {};
+\node at (+3,-1.5) {};
+
+\end{tikzpicture}
+
+\vskip 3ex
+Each expression starting with the one at the top-left is unravelled in turn.
+\scalebox{1.5}{%
+$\mathrm{\hat{y}}_{t+1} =$
+}
+\begin{tikzpicture}[every node/.style={font=\Large, text width=2.2cm, align=center}]
+\draw[xstep=2cm,ultra thick, ystep=1cm, color=gray] (-4,-2) grid (4,2);
+
+\node at (-3,+1.5) {$\mathrm{CBu}_t$};
+\node at (-1,+1.5) {};
+\node at (+1,+1.5) {};
+\node at (+3,+1.5) {};
+
+\node at (-3,+0.5) {};
+\node at (-1,+0.5) {$-\mathrm{CA}\mathrm{Cx}_t$};
+\node at (+1,+0.5) {};
+\node at (+3,+0.5) {};
+
+\node at (-3,-0.5) {};
+\node at (-1,-0.5) {};
+\node at (+1,-0.5) {$\mathrm{c}_2\mathrm{Cx}_{t-1}$};
+\node at (+3,-0.5) {};
+
+\node at (-3,-1.5) {};
+\node at (-1,-1.5) {};
+\node at (+1,-1.5) {};
+\node at (+3,-1.5) {};
+
+\end{tikzpicture}
+\vskip 3ex
+\scalebox{1.5}{%
+$\mathrm{\hat{y}}_{t+1} =$
+}
+\begin{tikzpicture}[every node/.style={font=\Large, text width=3.6cm, align=center}]
+\draw[xstep=2cm,ultra thick, ystep=1cm, color=gray] (-4,-2) grid (4,2);
+
+\node at (-3,+1.5) {$\mathrm{CBu}_t$};
+\node at (-1,+1.5) {};
+\node at (+1,+1.5) {};
+\node at (+3,+1.5) {};
+
+\node at (-3,+0.5) {$\mathrm{CABu}_{t-1}$};
+\node at (-1,+0.5) {$-\mathrm{CB}\mathrm{Cu}_{t-1}$};
+\node at (+1,+0.5) {};
+\node at (+3,+0.5) {};
+
+\node at (-3,-0.5) {$\mathrm{CA}^2\mathrm{Cx}_{t-1}$};
+\node at (-1,-0.5) {$-c_1\mathrm{CA}\mathrm{Cx}_{t-1}$};
+\node at (+1,-0.5) {$\mathrm{c}_2\mathrm{Cx}_{t-1}$};
+\node at (+3,-0.5) {};
+
+\node at (-3,-1.5) {};
+\node at (-1,-1.5) {};
+\node at (+1,-1.5) {};
+\node at (+3,-1.5) {};
+
+\end{tikzpicture}
+\vskip 3ex
+\scalebox{1.5}{%
+$\mathrm{\hat{y}}_{t+1} =$
+}
+\begin{tikzpicture}[every node/.style={font=\Large, text width=3.6cm, align=center}]
+\draw[xstep=3cm,ultra thick, ystep=1cm, color=gray] (-6,-2) grid (6,2);
+
+% Row 1 (y=+1.5)
+\node at (-4.5,+1.5) {$\mathrm{CBu}_t$};
+\node at (-1.5,+1.5) {};
+\node at (+1.5,+1.5) {};
+\node at (+4.5,+1.5) {};
+
+% Row 2 (y=+0.5)
+\node at (-4.5,+0.5) {$\mathrm{CABu}_{t-1}$};
+\node at (-1.5,+0.5) {$-\mathrm{CB}\mathrm{Cu}_{t-1}$};
+\node at (+1.5,+0.5) {};
+\node at (+4.5,+0.5) {};
+
+% Row 3 (y=-0.5)
+\node at (-4.5,-0.5) {$\mathrm{CA}^2\mathrm{Bx}_{t-2}$};
+\node at (-1.5,-0.5) {$-c_1\mathrm{CAB}\mathrm{Cu}_{t-2}$};
+\node at (+1.5,-0.5) {$-c_2\mathrm{B}\mathrm{Cu}_{t-2}$};
+\node at (+4.5,-0.5) {};
+
+% Row 4 (y=-1.5)
+\node at (-4.5,-1.5) {$\mathrm{CA}^3\mathrm{Cx}_{t-2}$};
+\node at (-1.5,-1.5) {$-c_1\mathrm{CA}^2\mathrm{Cx}_{t-2}$};
+\node at (+1.5,-1.5) {$-c_2\mathrm{CA}\mathrm{Cx}_{t-2}$};
+\node at (+4.5,-1.5) {};
+
+\end{tikzpicture}
+\vskip 3ex
+If I can create higher power of A as a linear combination of lower order powers of A , I can create cancellation.
+This is what the cayley-hamilton theorem does. At row 4 there are enough terms for cancellation.
+\vskip 3ex
+\begin{multline}
+\mathrm{\hat{y}}_{t+1} = \sum_{i = 1}^n \left(\mathrm{CA}^{i - 1}\mathrm{B} - \sum_{j = 1}^{i - 1} \mathrm{c}_j \mathrm{CA}^{i - j -1}\mathrm{B}\right)\mathrm{u}_{t - i} + \\
+\sum_{i = n + 1}^t\left(\mathrm{CA}^{i - n - 1}\cancelto(0){\left(\mathrm{A}^n - \sum_{j = 1}^n \mathrm{cj} \mathrm{A}^{n - 1}\right)}\mathrm{B} \right)\mathrm{u}_{t - i}
+\end{multline}
+
+\vskip 3ex
+\textbf{Cancelled to 0} Pay attention to what is cancelled as the score seems to cover a small part of the term after the plus sign.
+\vskip 3ex
+\scalebox{1.5}{%
+\mathrm{\hat{y}}_{t+1} = \sum_{i = 1}^n \left(\mathrm{CA}^{i - 1}\mathrm{B} - \sum_{j = 1}^{i - 1} \mathrm{c}_j \mathrm{CA}^{i - j -1}\mathrm{B}\right)\mathrm{u}_{t - i}
+}
+\vskip 3ex
+This doesn't grow as a function of \texttt{t} as many expresssions have been cancelled out.
+\vskip 3ex
+
+
+\begin{tcolorbox}[fontupper=\Large,sharp corners, colback=teal!20, colframe=Aquamarine!10!blue]
+Variance is bounded independtly of \testtt{t}
+\end{tcolorbox}
+
+\vskip 3ex
+\textbf{First attempt :} Take the $\mathrm{cj}s =$ the co-efficients of the characteristic polynomial of my transition matrix $\mathrm{A}$. I don't know that but I pretend that someone told me the transition matrix.
+
+Recall the above
+
+And so direct computation shows that the new time series satisfies
+\begin{itemize}
+    \item[\checkmark] Variance is bounded independtly of \testtt{t}
+    \item[$\times$] Expectation is unchanged
+  $\mathbb{E}\left(\mathrm{\hat{y}}_{t+j}\,\mathrm{u}^T\right) =\mathbb{E}\left(\mathrm{y}_{t+j}\,\mathrm{u}^T\right)$
+\end{itemize}
+
+\vskip 3ex
+because we pick extra terms
+\vskip 3ex
+\scalebox{1.5}{%
+$\mathrm{\hat{y}}_{t+1} = \sum_{i = 1}^n \left(\mathrm{CA}^{i - 1}\mathrm{B} - \sum_{j = 1}^{i - 1} \mathrm{c}_j \mathrm{CA}^{i - j -1}\mathrm{B}\right)\mathrm{u}_{t - i}$
+}
+
+
+\textbf{Second attempt :} Same strategy but using lag
+\vskip 3ex
+
+\scalebox{1.8}{%
+$\mathrm{\hat{y}}_t = \mathrm{y}_t\sum_{j = 1}^n  \underbrace{{\alpha}_j y_{t - j - r}}\parbox{2 cm}{Wait 'r' time steps to introduce lag}$
+}
+
+\vskip 3ex
+As long as you wait long enough, there is no correlation between $\mathrm{\hat{y}}_t$ and $\mathrm{\hat{y}}_{t-1}, \dots $
+
+
+\textbf{Claim :}
+\scalebox{1.8}{%
+$ \textbf{if r > k, }  \textbf{ there is no }\mathrm{\hat{y}}_{t-1}, \dots $
+}
+
+\vskip 3ex
+
+So
+
+\begin{itemize}
+    \item[\checkmark] Expectation is unchanged
+\scalebox{1.8}{%
+  $\mathbb{E}\left(\mathrm{\hat{y}}_{t+j}\,\mathrm{u}^T\right) =\mathbb{E}\left(\mathrm{y}_{t+j}\,\mathrm{u}^T\right)$
+}
+\end{itemize}
+\vskip 3ex
+But we still cancel out long-range dependencies and the variance stays bounded.
+
+\vskip 3ex
+
+\textbf{Third attempt :}
+\vskip 3ex
+\textbf{Problem :} The coefficients of the characteristic polynomial can be \textbf{ exponentially large }
+
+\vskip 3ex
+
+\textbf{Proposition :} Can show good bounded $\mathrm{c}_{j}s$ exist by appealing con condition number bounds on $ \mathrm{O}_s \textbf{ and } \mathrm{Q}_S$(Controllability and observability matrices) instead
+
+\vskip 3ex
+$ \mathrm{O}_s \textbf{ and } \mathrm{Q}_S \implies \textbf{ can find good } \mathrm{c}_{j}s$
+
+
+\vskip 3ex
+\section{Convex program}
+Can write a convex program to search for $\mathrm{c}_{j}s$ now that we know they exist.
+
+\vskip 3ex
+
+\textb{Find} $(\mathrm{c}_{1}, \dots, \mathrm{c}_{s})$ such that $\lvert \mathrm{c}_{s} \rvert \le \epsilon_1 \textbf{ for all j }$ and $\lVert \mathrm{y}_{t} \sum_{k = 1}^s \mathrm{c}_{j}\mathrm{y}_{i - j - r}\rVert^2 \le \epsilon_2 \textbf{ for all } t $
+
+
+\vskip 3ex
+\textbf{(1)} Define a function $\Phi_C$ that captures the potential variance.
+
+
+
+
+
+
+
+
+
 
 
 
